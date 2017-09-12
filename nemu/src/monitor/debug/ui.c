@@ -45,8 +45,13 @@ static struct {
 } cmd_table [] = {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
-  { "q", "Exit NEMU", cmd_q },
-
+  { "q", "Exit NEMU", cmd_q }
+  /*{ "si", "run commands step by step",cmd_si},
+  { "info", "print the data put in registers or parameters",cmd_info},
+  { "p", "print the value of expression",cmd_p},
+  { "x", "calculate the value of expression and output the n four-byte",cmd_x},
+  { "w", "stop executing when the parameter detected changed",cmd_w},
+  { "d", "delect the checkpoints",cmd_d}*/
   /* TODO: Add more commands */
 
 };
