@@ -6,7 +6,6 @@
 typedef struct watchpoint {
   int NO;
   struct watchpoint *next;
-
   /* TODO: Add more members if necessary */
 
 

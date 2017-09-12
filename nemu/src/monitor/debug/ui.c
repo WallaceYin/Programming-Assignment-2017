@@ -38,6 +38,53 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+static int cmd_si(char *args) {
+  char *arg = strtok(NULL, " ");
+  if (arg == NULL) 
+    cpu_exec(1);
+  else {
+    int i,n;
+    n = 0;
+    for (i = 0; i < strlen(arg); i++) 
+      n = n*10 + (int)arg[i] - 48;
+  }
+  return 0;
+}
+
+static int cmd_info(char *args) {
+	char *arg = strtok(NULL," ");
+	if (strcmp(arg, "r") == 0) {
+		printf("eax\t0x%x\t%u\n",cpu.eax,cpu.eax);
+		printf("ecx\t0x%x\t%u\n",cpu.ecx,cpu.ecx);
+		printf("edx\t0x%x\t%u\n",cpu.edx,cpu.edx);
+		printf("ebx\t0x%x\t%u\n",cpu.ebx,cpu.ebx);
+		printf("esp\t0x%x\t%u\n",cpu.esp,cpu.esp);
+		printf("ebp\t0x%x\t%u\n",cpu.ebp,cpu.ebp);
+		printf("esi\t0x%x\t%u\n",cpu.esi,cpu.esi);
+		printf("edi\t0x%x\t%u\n",cpu.edi,cpu.edi);
+	}
+	else if (strcmp(arg,"w") == 0) {
+	}
+	else printf("Unknown command '%s'",arg);
+	return 0;
+}
+
+static int cmd_p(char *args) {
+	return 0;
+}
+
+static int cmd_x(char *args) {
+	return 0;
+}
+
+static int cmd_w(char *args) {
+	return 0;
+}
+
+static int cmd_d(char *args) {
+	return 0;
+}
+
 static struct {
   char *name;
   char *description;
@@ -45,13 +92,13 @@ static struct {
 } cmd_table [] = {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
-  { "q", "Exit NEMU", cmd_q }
-  /*{ "si", "run commands step by step",cmd_si},
-  { "info", "print the data put in registers or parameters",cmd_info},
-  { "p", "print the value of expression",cmd_p},
-  { "x", "calculate the value of expression and output the n four-byte",cmd_x},
-  { "w", "stop executing when the parameter detected changed",cmd_w},
-  { "d", "delect the checkpoints",cmd_d}*/
+  { "q", "Exit NEMU", cmd_q },
+  { "si", "run commands step by step",cmd_si },
+  { "info", "print the data put in registers or parameters",cmd_info },
+  { "p", "print the value of expression",cmd_p },
+  { "x", "calculate the value of expression and output the n four-byte",cmd_x },
+  { "w", "stop executing when the parameter detected changed",cmd_w },
+  { "d", "delect the checkpoints",cmd_d }
   /* TODO: Add more commands */
 
 };
