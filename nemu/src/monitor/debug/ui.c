@@ -65,7 +65,7 @@ static int cmd_info(char *args) {
 	}
 	else if (strcmp(arg,"w") == 0) {
 	}
-	else printf("Unknown command '%s'",arg);
+	else printf("Unknown command '%s'\n",arg);
 	return 0;
 }
 
@@ -84,7 +84,7 @@ static int cmd_x(char *args) {
 	for (i = 0; i < strlen(arg); i ++)
 		scan_addr = scan_addr * 10 + (int)arg[i] - 48;
 	for (i = 0; i < n; i ++)
-		printf("0x%x\t0x%u",scan_addr + 4 * i,vaddr_read(scan_addr + 4 * i,4));
+		printf("0x%x\t0x%u\n",scan_addr + 4 * i,vaddr_read(scan_addr + 4 * i,4));
 	return 0;
 }
 
