@@ -47,6 +47,7 @@ static int cmd_si(char *args) {
     n = 0;
     for (i = 0; i < strlen(arg); i++) 
       n = n*10 + (int)arg[i] - 48;
+    cpu_exec(n);
   }
   return 0;
 }
