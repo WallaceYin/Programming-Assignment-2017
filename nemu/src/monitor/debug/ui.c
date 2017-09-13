@@ -74,6 +74,17 @@ static int cmd_p(char *args) {
 }
 
 static int cmd_x(char *args) {
+	char *arg = strtok(NULL, " ");
+	int i,n;
+	n = 0;
+	for (i = 0; i < strlen(arg); i ++)
+		n = n * 10 + (int)arg[i] - 48;
+	arg = strtok(NULL, " ");
+	unsigned int scan_addr = 0;
+	for (i = 0; i < strlen(arg); i ++)
+		scan_addr = scan_addr * 10 + (int)arg[i] - 48;
+	for (i = 0; i < n; i ++)
+		printf("0x%x\t0x%u",scan_addr + 4 * i,vaddr_read(scan_addr + 4 * i,4));
 	return 0;
 }
 
