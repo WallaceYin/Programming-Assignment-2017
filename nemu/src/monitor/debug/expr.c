@@ -35,7 +35,7 @@ static struct rule {
   {"==", TK_EQ},         // equal
   {"[0-9]+",TK_DEX},    //dexnumber
   {"0x[0-9abcde]+",TK_HEX},    //hexnumber
-  {"%e[a-z]+",TK_REG}	//register
+  {"\\$e[a-z]+",TK_REG}	//register
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
