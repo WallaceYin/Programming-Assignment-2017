@@ -7,8 +7,10 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ
-
+  TK_NOTYPE = 256, TK_EQ,
+  TK_PLUS = 43, TK_MINUS = 45,
+  TK_TIMES = 42, TK_DIV = 47,
+  TK_lpar = 28, TK_rpar = 29
   /* TODO: Add more token types */
 
 };
@@ -21,9 +23,13 @@ static struct rule {
   /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
    */
-
+  {"\\)", TK_rpar},          // right parenthesis
+  {"\\(", TK_lpar},          // left parenthesis
+  {"\\", TK_DIV},         // divide
+  {"\\*", TK_TIMES},         // times
+  {"\\-", TK_MINUS},         // minus
   {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
+  {"\\+", TK_PLUS},         // plus
   {"==", TK_EQ}         // equal
 };
 
