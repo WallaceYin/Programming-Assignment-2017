@@ -10,7 +10,9 @@ enum {
   TK_NOTYPE = 256, TK_EQ,
   TK_PLUS = 43, TK_MINUS = 45,
   TK_TIMES = 42, TK_DIV = 47,
-  TK_lpar = 28, TK_rpar = 29
+  TK_lpar = 28, TK_rpar = 29,
+  TK_HEX = 128, TK_DEX = 129,
+  TK_REG = 0
   /* TODO: Add more token types */
 
 };
@@ -30,7 +32,10 @@ static struct rule {
   {"\\-", TK_MINUS},         // minus
   {" +", TK_NOTYPE},    // spaces
   {"\\+", TK_PLUS},         // plus
-  {"==", TK_EQ}         // equal
+  {"==", TK_EQ},         // equal
+  {"[0-9]+",TK_DEX},    //dexnumber
+  {"0x[0-9abcde]+",TK_HEX},    //hexnumber
+  {"%e[a-z]+",TK_REG}	//register
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
