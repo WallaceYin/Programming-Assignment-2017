@@ -7,12 +7,12 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ,
+  TK_NOTYPE = 256, TK_EQ = 2,
   TK_PLUS = 43, TK_MINUS = 45,
   TK_TIMES = 42, TK_DIV = 47,
   TK_lpar = 28, TK_rpar = 29,
   TK_HEX = 128, TK_DEX = 129,
-  TK_REG = 0
+  TK_REG = 1
   /* TODO: Add more token types */
 
 };
@@ -67,6 +67,100 @@ typedef struct token {
 Token tokens[32];
 int nr_token;
 
+bool higherLevel(int TK_type_1, int TK_type_2)
+{
+	if (TK_type_2 == TK_lpar || TK_type_2 == TK_rpar)
+		return 0;
+	if (TK_type_1 == TK_TIMES || TK_type_1 == TK_DIV)
+	{
+		if (TK_type_2 == TK_PLUS || TK_type_2 == TK_MINUS)
+			return 1;
+	}
+	return 0;
+}
+
+uint32_t regToVal(int p)
+{
+	if (strcmp(tokens[p].str,"$eax") == 0)
+		return cpu.eax;
+	if (strcmp(tokens[p].str,"$ecx") == 0)
+		return cpu.ecx;
+	if (strcmp(tokens[p].str,"$ebx") == 0)
+		return cpu.ebx;
+	if (strcmp(tokens[p].str,"$edx") == 0)
+		return cpu.edx;
+	if (strcmp(tokens[p].str,"$esp") == 0)
+		return cpu.esp;
+	if (strcmp(tokens[p].str,"$ebp") == 0)
+		return cpu.ebp;
+	if (strcmp(tokens[p].str,"$esi") == 0)
+		return cpu.esi;
+	if (strcmp(tokens[p].str,"$edi") == 0)
+		return cpu.edi;
+	return 0;
+}
+
+uint32_t hexToVal(int p)
+{
+	int i;
+	uint32_t n;
+	n = 0;
+	for (i = 2; i < strlen(tokens[p].str); i++)
+		n = n * 16 + (int)tokens[p].str[i] - 48;
+	return n;
+}
+
+uint32_t dexToVal(int p)
+{
+	int i; 
+	uint32_t n;
+	n = 0;
+	for (i = 0; i < strlen(tokens[p].str); i++)
+		n = n * 10 + (int)tokens[p].str[i] - 48;
+	return n;
+}
+
+uint32_t eval(int p,int q)
+{
+	if (p == q)
+	{
+		if (tokens[p].type == TK_REG)
+			return regToVal(p);
+		else if (tokens[p].type == TK_HEX)
+			return hexToVal(p);
+		else return dexToVal(p);
+	}
+	else if (tokens[p].type == TK_lpar && tokens[q].type == TK_rpar)
+	{
+		return eval(p+1,q-1);
+	}
+	int i,domain,Inpair,domainTri;
+	domain = 0;
+	Inpair = 0;
+	domainTri = 0;
+	for (i = p; i <= q; i++)
+	{
+		if (Inpair == 0 && higherLevel(domain,tokens[i].type))
+		{
+			domain = tokens[i].type;
+			domainTri = i;
+		}
+		if (tokens[i].type == TK_lpar)
+			Inpair++;
+		if (tokens[i].type == TK_rpar)
+			Inpair--;
+	}
+	if (domain == TK_PLUS)
+		return eval(p,domainTri - 1) + eval(domainTri + 1,q);
+	if (domain == TK_MINUS)
+		return eval(p,domainTri - 1) - eval(domainTri + 1,q);
+	if (domain == TK_TIMES)
+		return eval(p,domainTri - 1) * eval(domainTri + 1,q);
+	if (domain == TK_DIV)
+		return eval(p,domainTri - 1) / eval(domainTri + 1,q);
+	return 0;
+}
+
 static bool make_token(char *e) {
   int position = 0;
   int i;
@@ -84,18 +178,21 @@ static bool make_token(char *e) {
         Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
             i, rules[i].regex, position, substr_len, substr_len, substr_start);
         position += substr_len;
-        strcpy(tokens[nr_token].str,substr_start);
+	if (rules[i].token_type == 256)
+		continue;
         tokens[nr_token].type = rules[i].token_type;
         /* TODO: Now a new token is recognized with rules[i]. Add codes
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-
         switch (rules[i].token_type) {
-          default: TODO();
+		case TK_DEX:	strcpy(tokens[nr_token].str, substr_start);
+		case TK_HEX:	strcpy(tokens[nr_token].str, substr_start);
+		case TK_REG:	strcpy(tokens[nr_token].str, substr_start);
         }
 
         break;
+
       }
     }
 
@@ -113,6 +210,8 @@ uint32_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
+  init_regex();
+  uint32_t ans = eval(0, nr_token-1);
   /* TODO: Insert codes to evaluate the expression. */
-  return 0;
+  return ans;
 }
