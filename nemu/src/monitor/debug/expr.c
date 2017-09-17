@@ -27,7 +27,7 @@ static struct rule {
    */
   {"\\)", TK_rpar},          // right parenthesis
   {"\\(", TK_lpar},          // left parenthesis
-  {"\\", TK_DIV},         // divide
+  {"/", TK_DIV},         // divide
   {"*", TK_TIMES},         // times
   {"-", TK_MINUS},         // minus
   {" +", TK_NOTYPE},    // spaces
