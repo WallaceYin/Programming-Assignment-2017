@@ -122,6 +122,7 @@ uint32_t dexToVal(int p)
 	n = 0;
 	for (i = 0; i < strlen(tokens[p].str); i++)
 		n = n * 10 + (int)tokens[p].str[i] - 48;
+	printf("n = %d",n);
 	return n;
 }
 
