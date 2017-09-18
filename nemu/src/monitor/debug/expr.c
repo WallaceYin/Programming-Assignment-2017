@@ -116,13 +116,14 @@ uint32_t hexToVal(int p)
 
 uint32_t dexToVal(int p)
 {
-	printf("Enter dextoval with p =%d",p);
+	printf("Enter dextoval with p =%d\n",p);
+	printf("string is %s\n",tokens[p].str);
 	int i; 
 	uint32_t n;
 	n = 0;
 	for (i = 0; i < strlen(tokens[p].str); i++)
 		n = n * 10 + (int)tokens[p].str[i] - 48;
-	printf("n = %d",n);
+	printf("n = %d\n",n);
 	return n;
 }
 
