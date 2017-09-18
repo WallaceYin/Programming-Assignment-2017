@@ -65,6 +65,9 @@ static int cmd_info(char *args) {
 		printf("edi\t0x%8x\t%u\n",cpu.edi,cpu.edi);
 	}
 	else if (strcmp(arg,"w") == 0) {
+		bool *succ;
+		succ = 0;
+		printf("%d\n",expr(arg, succ));
 	}
 	else printf("Unknown command '%s'\n",arg);
 	return 0;
