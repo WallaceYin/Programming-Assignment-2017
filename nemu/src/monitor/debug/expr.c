@@ -189,7 +189,6 @@ static bool make_token(char *e) {
 	if (rules[i].token_type == 256)
 		continue;
         tokens[nr_token].type = rules[i].token_type;
-	nr_token ++;
         /* TODO: Now a new token is recognized with rules[i]. Add codes
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
@@ -199,7 +198,7 @@ static bool make_token(char *e) {
 		case TK_HEX:	strcpy(tokens[nr_token].str, substr_start);
 		case TK_REG:	strcpy(tokens[nr_token].str, substr_start);
         }
-
+	nr_token ++;
         break;
 
       }
