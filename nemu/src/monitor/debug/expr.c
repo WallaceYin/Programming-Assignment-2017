@@ -122,6 +122,7 @@ uint32_t dexToVal(int p)
 
 uint32_t eval(int p,int q)
 {
+	printf("Enter eval with p = %d and q = %d\n",p,q);
 	if (p == q)
 	{
 		if (tokens[p].type == TK_REG)
