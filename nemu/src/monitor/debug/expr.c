@@ -69,11 +69,16 @@ int nr_token;
 
 bool higherLevel(int TK_type_1, int TK_type_2)
 {
-	if (TK_type_2 == TK_lpar || TK_type_2 == TK_rpar)
-		return 0;
 	if (TK_type_1 == TK_TIMES || TK_type_1 == TK_DIV)
 	{
 		if (TK_type_2 == TK_PLUS || TK_type_2 == TK_MINUS)
+			return 1;
+		if (TK_type_2 == 0)
+			return 1;
+	}
+	if (TK_type_1 == TK_PLUS || TK_type_1 == TK_MINUS)
+	{
+		if (TK_type_2 == 0)
 			return 1;
 	}
 	return 0;
@@ -121,7 +126,6 @@ uint32_t dexToVal(int p)
 	n = 0;
 	for (i = 0; i < strlen(tokens[p].str); i++)
 		n = n * 10 + (int)tokens[p].str[i] - 48;
-	printf("n = %d\n",n);
 	return n;
 }
 
