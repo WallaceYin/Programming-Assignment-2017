@@ -11,7 +11,7 @@ enum {
   TK_PLUS = 43, TK_MINUS = 45,
   TK_TIMES = 42, TK_DIV = 47,
   TK_lpar = 28, TK_rpar = 29,
-  TK_HEX = 128, TK_DEX = 129,
+  TK_HEX = 127, TK_DEX = 129,
   TK_REG = 1
   /* TODO: Add more token types */
 
