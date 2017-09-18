@@ -116,8 +116,6 @@ uint32_t hexToVal(int p)
 
 uint32_t dexToVal(int p)
 {
-	printf("Enter dextoval with p =%d\n",p);
-	printf("string is %s\n",tokens[p].str);
 	int i; 
 	uint32_t n;
 	n = 0;
@@ -129,7 +127,6 @@ uint32_t dexToVal(int p)
 
 uint32_t eval(int p,int q)
 {
-	printf("Enter eval with p = %d and q = %d\n",p,q);
 	if (p == q)
 	{
 		if (tokens[p].type == TK_REG)
