@@ -188,7 +188,7 @@ static bool make_token(char *e) {
             i, rules[i].regex, position, substr_len, substr_len, substr_start);
         position += substr_len;
 	if (rules[i].token_type == 256)
-		continue;
+		break;
         tokens[nr_token].type = rules[i].token_type;
         /* TODO: Now a new token is recognized with rules[i]. Add codes
          * to record the token in the array `tokens'. For certain types
