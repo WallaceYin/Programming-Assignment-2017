@@ -64,7 +64,8 @@ static int cmd_info(char *args) {
 		printf("esi\t0x%8x\t%u\n",cpu.esi,cpu.esi);
 		printf("edi\t0x%8x\t%u\n",cpu.edi,cpu.edi);
 	}
-	else if (strcmp(arg,"w") == 0) {
+	else if (strcmp(arg,"w") == 0) 
+	{
 	}
 	else printf("Unknown command '%s'\n",arg);
 	return 0;
