@@ -114,7 +114,7 @@ uint32_t hexToVal(int p)
 	{
 		if (tokens[p].str[i] > '9')
 			n = n * 16 + (int)tokens[p].str[i] - 51;
-		else n = n * 10 + (int)tokens[p].str[i] -48;
+		else n = n * 16 + (int)tokens[p].str[i] -48;
 	}
 	return n;
 }
