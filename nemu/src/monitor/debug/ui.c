@@ -85,10 +85,15 @@ static int cmd_x(char *args) {
 	n = 0;
 	for (i = 0; i < strlen(arg); i ++)
 		n = n * 10 + (int)arg[i] - 48;
-	arg = strtok(NULL, " ");
-	unsigned int scan_addr = 0;
-	for (i = 0; i < strlen(arg); i ++)
-		scan_addr = scan_addr * 10 + (int)arg[i] - 48;
+	//arg = strtok(NULL, " ");
+	char *ex = arg + strlen(arg) + 1;
+	bool succ;
+	unsigned int scan_addr = expr(ex,&succ);
+	if (!succ)
+	{
+		printf("Illegal Sentence\n");
+		return 0;
+	}
 	for (i = 0; i < n; i ++)
 		printf("0x%8x\t0x%u\n",scan_addr + 4 * i,vaddr_read(scan_addr + 4 * i,4));
 	return 0;
