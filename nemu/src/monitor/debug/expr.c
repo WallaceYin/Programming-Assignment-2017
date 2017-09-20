@@ -196,15 +196,25 @@ static bool make_token(char *e) {
          */
         switch (rules[i].token_type) {
 		case TK_DEX:
-			for (int j = 0; j < substr_len; j++)
-				tokens[nr_token].str[j] = substr_start[j];	
-		case TK_HEX:
-			for (int j = 0; j < substr_len; j++)
-				tokens[nr_token].str[j] = substr_start[j];	
-		case TK_REG:
+		{
 			for (int j = 0; j < substr_len; j++)
 				tokens[nr_token].str[j] = substr_start[j];
-        }
+			tokens[nr_token].str[substr_len] = '\0';
+		};
+		case TK_HEX:
+		{
+			for (int j = 0; j < substr_len; j++)
+				tokens[nr_token].str[j] = substr_start[j];
+			tokens[nr_token].str[substr_len] = '\0';
+		}
+		case TK_REG:
+		{
+			for (int j = 0; j < substr_len; j++)
+				tokens[nr_token].str[j] = substr_start[j];
+			tokens[nr_token].str[substr_len] = '\0';
+		}
+        
+	}
 	Log("tokens[].str = %s\n",tokens[nr_token].str);
 	nr_token ++;
         break;
