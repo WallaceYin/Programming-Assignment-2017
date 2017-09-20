@@ -89,6 +89,7 @@ static int cmd_x(char *args) {
 	char *ex = arg + strlen(arg) + 1;
 	bool succ;
 	unsigned int scan_addr = expr(ex,&succ);
+	Log("scan_addr = %d\n",scan_addr);
 	if (!succ)
 	{
 		printf("Illegal Sentence\n");
