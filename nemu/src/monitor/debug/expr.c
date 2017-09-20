@@ -189,7 +189,7 @@ uint32_t eval(int p,int q)
 		}
 
 	}
-	return 0;
+	return Value;
 }
 
 static bool make_token(char *e) {
