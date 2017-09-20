@@ -75,7 +75,7 @@ static int cmd_p(char *args) {
 	int n = expr(args,&succ);
 	if (succ)
 		printf("%d\n",n);
-	else printf("Unmatch\n");
+	else printf("Illegal Sentence\n");
 	return 0;
 }
 
