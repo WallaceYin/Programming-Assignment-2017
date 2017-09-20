@@ -170,7 +170,10 @@ uint32_t eval(int p,int q)
 			}
 			if (tokens[i].type == TK_MINUS)
 			{
-				Value -= eval(domainTri+1, i-1);
+				if (domainTri == p-1)
+					Value += eval(domainTri+1,i-1);
+				else
+					Value -= eval(domainTri+1, i-1);
 				domainTri = i;
 			}
 		}
@@ -178,11 +181,18 @@ uint32_t eval(int p,int q)
 		{
 			if (tokens[i].type == TK_TIMES)
 			{
-				Value *= eval(domainTri+1, i-1);
+				if (domainTri == p-1)
+					Value += eval(domainTri+1, i-1);
+				else
+					Value *= eval(domainTri+1, i-1);
 				domainTri = i;
 			}
 			if (tokens[i].type == TK_DIV)
 			{
+				if (domainTri == p-1)
+					Value  += eval(domainTri+1, i-1);
+				else 
+					Value /= eval(domainTri+1, i-1);
 				Value /= eval(domainTri+1, i-1);
 				domainTri = i;
 			}
