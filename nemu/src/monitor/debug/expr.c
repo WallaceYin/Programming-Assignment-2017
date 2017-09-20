@@ -146,7 +146,7 @@ uint32_t eval(int p,int q)
 	int i,domain,Inpair,domainTri;
 	domain = 0;
 	Inpair = 0;
-	domainTri = p;
+	domainTri = p-1;
 	for (i = p; i <= q; i++)
 	{
 		if (Inpair == 0 && higherLevel(domain,tokens[i].type))
@@ -165,29 +165,42 @@ uint32_t eval(int p,int q)
 		{
 			if (tokens[i].type == TK_PLUS)
 			{
-				Value += eval(domainTri, i-1);
-				domainTri = i+1;
+				Value += eval(domainTri+1, i-1);
+				domainTri = i;
 			}
 			if (tokens[i].type == TK_MINUS)
 			{
-				Value -= eval(domainTri, i-1);
-				domainTri = i+1;
+				Value -= eval(domainTri+1, i-1);
+				domainTri = i;
 			}
 		}
 		if (domain == TK_TIMES || domain == TK_MINUS)
 		{
 			if (tokens[i].type == TK_TIMES)
 			{
-				Value *= eval(domainTri, i-1);
-				domainTri = i+1;
+				Value *= eval(domainTri+1, i-1);
+				domainTri = i;
 			}
 			if (tokens[i].type == TK_DIV)
 			{
-				Value /= eval(domainTri, i-1);
-				domainTri = i+1;
+				Value /= eval(domainTri+1, i-1);
+				domainTri = i;
 			}
 		}
-
+	}
+	if (domain == TK_PLUS || domain == TK_MINUS)
+	{
+		if (tokens[domainTri].type == TK_PLUS)
+			Value += eval(domainTri+1, q);
+		if (tokens[domainTri].type == TK_MINUS)
+			Value -= eval(domainTri+1, q);
+	}
+	if (domain == TK_TIMES || domain == TK_DIV)
+	{
+		if (tokens[domainTri].type == TK_TIMES)
+			Value *= eval(domainTri+1,q);
+		if (tokens[domainTri].type == TK_DIV)
+			Value /= eval(domainTri+1,q);
 	}
 	return Value;
 }
