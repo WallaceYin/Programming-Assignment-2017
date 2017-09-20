@@ -215,7 +215,6 @@ static bool make_token(char *e) {
 		}
         
 	}
-	Log("tokens[].str = %s\n",tokens[nr_token].str);
 	nr_token ++;
         break;
 
