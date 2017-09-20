@@ -174,7 +174,7 @@ uint32_t eval(int p,int q)
 				domainTri = i;
 			}
 		}
-		if (domain == TK_TIMES || domain == TK_MINUS)
+		if (domain == TK_TIMES || domain == TK_DIV)
 		{
 			if (tokens[i].type == TK_TIMES)
 			{
