@@ -33,7 +33,7 @@ static struct rule {
   {" +", TK_NOTYPE},    // spaces
   {"\\+", TK_PLUS},         // plus
   {"==", TK_EQ},         // equal
-  {"[0-9]+",TK_DEX},    //dexnumber
+  {"[1-9]+[0-9]*",TK_DEX},    //dexnumber
   {"0x[0123456789abcde]+",TK_HEX},    //hexnumber
   {"\\$e[a-z]+",TK_REG}	//register
 };
