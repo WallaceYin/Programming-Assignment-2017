@@ -73,12 +73,12 @@ bool higherLevel(int TK_type_1, int TK_type_2)
 	{
 		if (TK_type_2 == TK_PLUS || TK_type_2 == TK_MINUS)
 			return 1;
-		if (TK_type_2 == 0)
-			return 1;
 	}
-	if (TK_type_1 == TK_PLUS || TK_type_1 == TK_MINUS)
+	if (TK_type_1 == 0)
 	{
-		if (TK_type_2 == 0)
+		if (TK_type_2 == TK_PLUS || TK_type_2 == TK_MINUS)
+			return 1;
+		if (TK_type_2 == TK_TIMES || TK_type_2 == TK_DIV)
 			return 1;
 	}
 	return 0;
