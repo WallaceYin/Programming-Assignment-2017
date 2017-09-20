@@ -195,9 +195,15 @@ static bool make_token(char *e) {
          * of tokens, some extra actions should be performed.
          */
         switch (rules[i].token_type) {
-		case TK_DEX:	strcpy(tokens[nr_token].str, substr_start);
-		case TK_HEX:	strcpy(tokens[nr_token].str, substr_start);
-		case TK_REG:	strcpy(tokens[nr_token].str, substr_start);
+		case TK_DEX:
+			for (int j = 0; j < substr_len; j++)
+				tokens[nr_token].str[j] = substr_start[j];	
+		case TK_HEX:
+			for (int j = 0; j < substr_len; j++)
+				tokens[nr_token].str[j] = substr_start[j];	
+		case TK_REG:
+			for (int j = 0; j < substr_len; j++)
+				tokens[nr_token].str[j] = substr_start[j];
         }
 	Log("tokens[].str = %s\n",tokens[nr_token].str);
 	nr_token ++;
