@@ -38,6 +38,12 @@ WP* new_up()
 void free_wp(WP *wp)
 {
 	WP* cwp = head;
+	if (cwp == wp)
+	{
+		if (wp->next == NULL)
+			cwp = NULL;
+		else cwp = wp->next;
+	}
 	while (cwp != NULL)
 	{
 		if (cwp->next == wp)
@@ -50,6 +56,16 @@ void free_wp(WP *wp)
 		else
 			cwp = cwp->next;
 	}
+	if (cwp == NULL)
+		Log("Watchpoint unfound\n");
+	else
+	{
+		cwp = free_;
+		while (cwp->next != NULL)
+			cwp = cwp->next;
+		cwp->next = wp;
+	}
+	return;
 }
 
 /* TODO: Implement the functionality of watchpoint */
