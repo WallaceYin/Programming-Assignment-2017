@@ -121,7 +121,6 @@ uint32_t hexToVal(int p)
 
 uint32_t dexToVal(int p)
 {
-	Log("the Dex number is %s\n",tokens[p].str);
 	int i; 
 	uint32_t n;
 	n = 0;
