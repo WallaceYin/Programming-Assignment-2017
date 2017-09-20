@@ -72,8 +72,7 @@ static int cmd_info(char *args) {
 
 static int cmd_p(char *args) {
 	bool succ = 0;
-	char *arg = strtok(NULL, " ");
-	int n = expr(arg,&succ);
+	int n = expr(args,&succ);
 	if (succ)
 		printf("%d\n",n);
 	else printf("Unmatch\n");
