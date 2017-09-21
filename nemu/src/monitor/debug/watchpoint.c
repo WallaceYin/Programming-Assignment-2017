@@ -85,7 +85,11 @@ bool check_wp(WP *wp)
 	equ = expr(wp->exp, &succ);
 	if (succ && wp->Val == equ)
 		return 1;
-	else return 0;
+	else
+	{
+		wp->Val = equ;
+		return 0;
+	}
 }
 
 /* TODO: Implement the functionality of watchpoint */
