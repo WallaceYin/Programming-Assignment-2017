@@ -29,14 +29,13 @@ void cpu_exec(uint64_t n) {
 
 #ifdef DEBUG
     /* TODO: check watchpoints here. */
-
 #endif
 
 #ifdef HAS_IOE
     extern void device_update();
     device_update();
 #endif
-
+	
     if (nemu_state != NEMU_RUNNING) { return; }
   }
 
