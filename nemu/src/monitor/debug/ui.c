@@ -98,7 +98,6 @@ static int cmd_x(char *args) {
 	char *ex = arg + strlen(arg) + 1;
 	bool succ;
 	unsigned int scan_addr = expr(ex,&succ);
-	Log("scan_addr = %d\n",scan_addr);
 	if (!succ)
 	{
 		printf("Illegal Sentence\n");
@@ -110,7 +109,14 @@ static int cmd_x(char *args) {
 }
 
 static int cmd_w(char *args) {
-
+	bool succ = 0;
+	int addr_wp = expr(args,&succ);
+	if (succ)
+	{
+		WP *wp;
+		wp = new_up();
+		wp->addr = addr_wp;
+	}
 	return 0;
 }
 
