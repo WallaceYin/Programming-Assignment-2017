@@ -20,7 +20,8 @@ void init_wp_pool() {
 
 WP* new_up()
 {
-	WP* nwp = free_;
+	WP* nwp;
+	nwp = free_;
 	free_ = free_->next;
 	if (head == NULL)
 		head = nwp;
@@ -37,7 +38,8 @@ WP* new_up()
 
 void free_wp(WP *wp)
 {
-	WP* cwp = head;
+	WP* cwp;
+	cwp = head;
 	if (cwp == wp)
 	{
 		if (wp->next == NULL)
