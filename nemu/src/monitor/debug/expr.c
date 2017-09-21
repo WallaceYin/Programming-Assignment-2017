@@ -12,7 +12,7 @@ enum {
   TK_TIMES = 42, TK_DIV = 47,
   TK_lpar = 28, TK_rpar = 29,
   TK_HEX = 127, TK_DEX = 129,
-  TK_REG = 1
+  TK_REG = 1,TK_ADDR = 3
   /* TODO: Add more token types */
 
 };
@@ -28,6 +28,7 @@ static struct rule {
   {"\\)", TK_rpar},          // right parenthesis
   {"\\(", TK_lpar},          // left parenthesis
   {"/", TK_DIV},         // divide
+  {"\\*0x[0123456789abcde]+",TK_ADDR},	//address
   {"\\*", TK_TIMES},         // times
   {"-", TK_MINUS},         // minus
   {" +", TK_NOTYPE},    // spaces
@@ -136,6 +137,20 @@ uint32_t dexToVal(int p)
 	return n;
 }
 
+uint32_t addrToVal(int p)
+{
+	int i;
+	uint32_t n;
+	n = 0;
+	for (i = 3; i < strlen(tokens[p].str); i++)
+	{
+		if (tokens[p].str[i] > '9')
+			n = n * 16 + (int)tokens[p].str[i] - 87;
+		else n = n * 16 + (int)tokens[p].str[i] - 48;
+	}
+	return vaddr_read(n,4);
+}
+
 uint32_t eval(int p,int q)
 {
 	if (p == q)
@@ -144,7 +159,11 @@ uint32_t eval(int p,int q)
 			return regToVal(p);
 		else if (tokens[p].type == TK_HEX)
 			return hexToVal(p);
-		else return dexToVal(p);
+		else if (tokens[p].type == TK_DEX)
+			return dexToVal(p);
+		else if (tokens[p].type == TK_ADDR)
+			return addrToVal(p);
+		return 0;
 	}
 	else if (tokens[p].type == TK_lpar && tokens[q].type == TK_rpar)
 	{
@@ -175,61 +194,6 @@ uint32_t eval(int p,int q)
 	if (domain == TK_DIV)
 		return eval(p, domainTri - 1) / eval(domainTri + 1, q);
 	return 0;
-	//int Value = 0;
-	/*for (i = p; i <= q; i++)
-	{
-		if (domain == TK_PLUS || domain == TK_MINUS)
-		{
-			if (tokens[i].type == TK_PLUS)
-			{
-				Value += eval(domainTri+1, i-1);
-				domainTri = i;
-			}
-			if (tokens[i].type == TK_MINUS)
-			{
-				if (domainTri == p-1)
-					Value += eval(domainTri+1,i-1);
-				else
-					Value -= eval(domainTri+1, i-1);
-				domainTri = i;
-			}
-		}
-		if (domain == TK_TIMES || domain == TK_DIV)
-		{
-			if (tokens[i].type == TK_TIMES)
-			{
-				if (domainTri == p-1)
-					Value += eval(domainTri+1, i-1);
-				else
-					Value *= eval(domainTri+1, i-1);
-				domainTri = i;
-			}
-			if (tokens[i].type == TK_DIV)
-			{
-				if (domainTri == p-1)
-					Value  += eval(domainTri+1, i-1);
-				else 
-					Value /= eval(domainTri+1, i-1);
-				Value /= eval(domainTri+1, i-1);
-				domainTri = i;
-			}
-		}
-	}
-	if (domain == TK_PLUS || domain == TK_MINUS)
-	{
-		if (tokens[domainTri].type == TK_PLUS)
-			Value += eval(domainTri+1, q);
-		if (tokens[domainTri].type == TK_MINUS)
-			Value -= eval(domainTri+1, q);
-	}
-	if (domain == TK_TIMES || domain == TK_DIV)
-	{
-		if (tokens[domainTri].type == TK_TIMES)
-			Value *= eval(domainTri+1,q);
-		if (tokens[domainTri].type == TK_DIV)
-			Value /= eval(domainTri+1,q);
-	}
-	return Value;*/
 }
 
 static bool make_token(char *e) {
@@ -272,7 +236,12 @@ static bool make_token(char *e) {
 				tokens[nr_token].str[j] = substr_start[j];
 			tokens[nr_token].str[substr_len] = '\0';
 		}
-        
+		case TK_ADDR:
+		{
+			for (int j = 0; j <substr_len; j++)
+				tokens[nr_token].str[j] = substr_start[j];
+			tokens[nr_token].str[substr_len] = '\0';
+		}
 	}
 	nr_token ++;
         break;
