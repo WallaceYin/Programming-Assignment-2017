@@ -78,6 +78,16 @@ WP* print_wp(WP *wp)
 		return wp->next;
 }
 
+bool check_wp(WP *wp)
+{
+	bool succ;
+	int equ;
+	equ = expr(wp->exp, &succ);
+	if (succ && wp->Val == equ)
+		return 1;
+	else return 0;
+}
+
 /* TODO: Implement the functionality of watchpoint */
 
 

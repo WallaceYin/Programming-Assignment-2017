@@ -71,7 +71,7 @@ static int cmd_info(char *args) {
 		wp = print_wp(wp);
 		while (wp != NULL)
 		{
-			printf("%2d\t%8x\t%u\n",wp->NO, wp->addr, vaddr_read(wp->addr,4));
+			printf("%2d\t%u\t%s",wp->NO, wp->Val, wp->exp);
 			wp = wp->next;
 		}
 	}
@@ -110,13 +110,10 @@ static int cmd_x(char *args) {
 
 static int cmd_w(char *args) {
 	bool succ = 0;
-	uint32_t addr_wp = expr(args,&succ);
-	if (succ)
-	{
-		WP *wp;
-		wp = new_up();
-		wp->addr = addr_wp;
-	}
+	uint32_t val= expr(args, &succ);
+	WP* wp = new_up();
+	strcmp(wp->exp, args);
+	wp->Val = val;
 	return 0;
 }
 
