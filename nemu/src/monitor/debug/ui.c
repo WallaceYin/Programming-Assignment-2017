@@ -112,7 +112,9 @@ static int cmd_w(char *args) {
 	bool succ = 0;
 	uint32_t val= expr(args, &succ);
 	WP* wp = new_up();
-	strcmp(wp->exp, args);
+	for (int j = 0; j < strlen(args); j++)
+		wp->exp[j] = args[j];
+	wp->exp[strlen(args)] = '\0';
 	Log("wp->exp =%s",wp->exp);
 	wp->Val = val;
 	return 0;
