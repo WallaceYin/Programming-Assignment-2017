@@ -78,18 +78,24 @@ WP* print_wp(WP *wp)
 		return wp->next;
 }
 
-bool check_wp(WP *wp)
+bool check_wp()
 {
 	bool succ;
-	int equ;
-	equ = expr(wp->exp, &succ);
-	if (succ && wp->Val == equ)
-		return 1;
-	else
+	int val;
+	WP* wp;
+	wp = head;
+	bool rm = 1;
+	while (wp != NULL)
 	{
-		wp->Val = equ;
-		return 0;
+		val = expr(wp->exp,&succ);
+		if (val != wp->Val)
+		{
+			printf("watchpoint %2d is stimulated, the value of %s has changed from %8u to %8u\n",wp->NO, wp->exp, wp->Val, val);
+			rm = 0;
+		}
 	}
+	if (!rm) return 0;
+	else return 1;
 }
 
 /* TODO: Implement the functionality of watchpoint */
