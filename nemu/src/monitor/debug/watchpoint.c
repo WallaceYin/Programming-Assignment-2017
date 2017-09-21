@@ -68,6 +68,14 @@ void free_wp(WP *wp)
 	return;
 }
 
+WP* print_wp(WP *wp)
+{
+	if (wp == NULL)
+		return head;
+	else
+		return wp->next;
+}
+
 /* TODO: Implement the functionality of watchpoint */
 
 
