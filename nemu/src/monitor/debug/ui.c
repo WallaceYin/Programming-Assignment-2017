@@ -66,6 +66,14 @@ static int cmd_info(char *args) {
 	}
 	else if (strcmp(arg,"w") == 0) 
 	{
+		WP* wp;
+		wp = NULL;
+		wp = print_wp(wp);
+		while (wp != NULL)
+		{
+			printf("%2d\t%8x\t%u\n",wp->NO, wp->addr, vaddr_read(wp->addr,4));
+			wp = wp->next;
+		}
 	}
 	else printf("Unknown command '%s'\n",arg);
 	return 0;
