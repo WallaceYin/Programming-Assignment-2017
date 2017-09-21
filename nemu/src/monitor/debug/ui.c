@@ -110,7 +110,7 @@ static int cmd_x(char *args) {
 
 static int cmd_w(char *args) {
 	bool succ = 0;
-	int addr_wp = expr(args,&succ);
+	uint32_t addr_wp = expr(args,&succ);
 	if (succ)
 	{
 		WP *wp;
