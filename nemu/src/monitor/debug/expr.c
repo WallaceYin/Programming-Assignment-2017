@@ -12,7 +12,9 @@ enum {
   TK_TIMES = 42, TK_DIV = 47,
   TK_lpar = 28, TK_rpar = 29,
   TK_HEX = 127, TK_DEX = 129,
-  TK_REG = 1,TK_ADDR = 3
+  TK_REG = 1,TK_ADDR = 3,
+  TK_NEQ = 5, TK_AND = 13,
+  TK_OR = 31
   /* TODO: Add more token types */
 
 };
@@ -36,7 +38,10 @@ static struct rule {
   {"==", TK_EQ},         // equal
   {"[1-9]+[0-9]*",TK_DEX},    //dexnumber
   {"0x[0123456789abcde]+",TK_HEX},    //hexnumber
-  {"\\$e[a-z]+",TK_REG}	//register
+  {"\\$e[a-z]+",TK_REG},	//register
+  {"!=",TK_NEQ},	//not equal
+  {"&&",TK_AND},	//and
+  {"||",TK_OR}		//or
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -193,6 +198,14 @@ uint32_t eval(int p,int q)
 		return eval(p, domainTri - 1) * eval(domainTri + 1, q);
 	if (domain == TK_DIV)
 		return eval(p, domainTri - 1) / eval(domainTri + 1, q);
+	if (domain == TK_EQ)
+		return (eval(p, domainTri - 1) == eval(domainTri + 1,q));
+	if (domain == TK_NEQ)
+		return (eval(p, domainTri - 1) != eval(domainTri + 1,q));
+	if (domain == TK_AND)
+		return (eval(p, domainTri - 1) && eval(domainTri + 1,q));
+	if (domain == TK_OR)
+		return (eval(p, domainTri - 1) || eval(domainTri + 1,q));
 	return 0;
 }
 
