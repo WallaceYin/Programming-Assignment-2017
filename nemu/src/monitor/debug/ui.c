@@ -94,7 +94,6 @@ static int cmd_x(char *args) {
 	n = 0;
 	for (i = 0; i < strlen(arg); i ++)
 		n = n * 10 + (int)arg[i] - 48;
-	//arg = strtok(NULL, " ");
 	char *ex = arg + strlen(arg) + 1;
 	bool succ;
 	unsigned int scan_addr = expr(ex,&succ);
@@ -115,7 +114,6 @@ static int cmd_w(char *args) {
 	for (int j = 0; j < strlen(args); j++)
 		wp->exp[j] = args[j];
 	wp->exp[strlen(args)] = '\0';
-	Log("wp->exp =%s",wp->exp);
 	wp->Val = val;
 	return 0;
 }
