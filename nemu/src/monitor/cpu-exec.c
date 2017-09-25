@@ -29,7 +29,7 @@ void cpu_exec(uint64_t n) {
     exec_wrapper(print_flag);
 
 #ifdef DEBUG
-    if (check_wp())
+    if (!check_wp())
     {
 	    nemu_state = NEMU_STOP;
     }
