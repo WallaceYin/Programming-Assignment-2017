@@ -71,7 +71,7 @@ static int cmd_info(char *args) {
 		wp = print_wp(wp);
 		while (wp != NULL)
 		{
-			printf("%2d\t%u\t%s",wp->NO, wp->Val, wp->exp);
+			printf("%2d\t%u\t%s\n",wp->NO, wp->Val, wp->exp);
 			wp = wp->next;
 		}
 	}
