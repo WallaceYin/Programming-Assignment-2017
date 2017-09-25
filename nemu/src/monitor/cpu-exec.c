@@ -31,7 +31,7 @@ void cpu_exec(uint64_t n) {
 #ifdef DEBUG
     if (!check_wp())
     {
-	    print_flag = 0;
+	    n = 0;
     }
 #endif
 
