@@ -121,6 +121,7 @@ static int cmd_w(char *args) {
 static int cmd_d(char *args) {
 	char *arg = strtok(NULL," ");
 	int i, n;
+	n = 0;
 	for (i = 0; i < strlen(arg); i++)
 	{
 		n = n * 10 + (int)arg[i] - 48;
