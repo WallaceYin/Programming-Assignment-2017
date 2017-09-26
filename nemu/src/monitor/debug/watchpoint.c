@@ -44,20 +44,29 @@ void free_wp(WP *wp)
 	{
 		if (wp->next == NULL)
 			cwp = NULL;
-		else cwp = wp->next;
-	}
-	while (cwp != NULL)
-	{
-		if (cwp->next == wp)
+		else 
 		{
-			if (wp->next == NULL)
-				cwp->next = NULL;
-			else cwp->next = wp->next;
-			break;
+			cwp = wp->next;
+			wp->next = NULL;
 		}
-		else
-			cwp = cwp->next;
 	}
+	else
+		while (cwp != NULL)
+		{
+			if (cwp->next == wp)
+			{
+				if (wp->next == NULL)
+					cwp->next = NULL;
+				else
+				{	
+					cwp->next = wp->next;
+					wp->next = NULL;
+				}
+				break;
+			}
+			else
+				cwp = cwp->next;
+		}
 	if (cwp == NULL)
 		Log("Watchpoint unfound\n");
 	else
