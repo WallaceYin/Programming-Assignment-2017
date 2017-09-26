@@ -125,6 +125,7 @@ static int cmd_d(char *args) {
 	{
 		n = n * 10 + (int)arg[i] - 48;
 	}
+	Log("The watchpoint to be deleted is %d\n",n);
 	WP* wp = NULL;
 	wp = print_wp(wp);
 	while (wp != NULL)
