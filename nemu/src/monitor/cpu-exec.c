@@ -31,7 +31,7 @@ void cpu_exec(uint64_t n) {
 #ifdef DEBUG
     if (!check_wp())
     {
-	    n = 0;
+	   nemu_state = NEMU_STOP;
     }
 #endif
 
