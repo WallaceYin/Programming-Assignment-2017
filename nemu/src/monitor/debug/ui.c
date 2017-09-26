@@ -119,6 +119,23 @@ static int cmd_w(char *args) {
 }
 
 static int cmd_d(char *args) {
+	char *arg = strtok(NULL," ");
+	int i, n;
+	for (i = 0; i < strlen(arg); i++)
+	{
+		n = n * 10 + (int)arg[i] - 48;
+	}
+	WP* wp = NULL;
+	wp = print_wp(wp);
+	while (wp != NULL)
+	{
+		if (wp->NO == n)
+		{
+			free_wp(wp);
+			break;
+		}
+		wp = wp->next;
+	}
 	return 0;
 }
 
