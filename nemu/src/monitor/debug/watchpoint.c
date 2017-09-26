@@ -93,6 +93,7 @@ bool check_wp()
 			printf("watchpoint %2d is stimulated, the value of %s has changed from %8u to %8u\n",wp->NO, wp->exp, wp->Val, val);
 			rm = 0;
 		}
+		wp = wp->next;
 	}
 	if (!rm) return 0;
 	else return 1;
