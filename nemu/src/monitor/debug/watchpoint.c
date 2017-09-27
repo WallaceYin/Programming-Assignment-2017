@@ -47,12 +47,12 @@ WP* new_up()
 
 void free_wp(WP *wp)
 {
-	Log("the watchpoint to be freed is %d\n",wp->NO);
 	WP* cwp;
 	cwp = head;
 	bool fd = 0;
 	if (cwp == wp)
 	{
+		Log("find watchpoint %d\n",wp->NO);
 		if (wp->next == NULL)
 			cwp = NULL;
 		else 
@@ -67,6 +67,7 @@ void free_wp(WP *wp)
 		{
 			if (cwp->next == wp)
 			{
+				Log("find watchpoint %d\n",wp->NO);
 				if (wp->next == NULL)
 					cwp->next = NULL;
 				else
