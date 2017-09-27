@@ -34,11 +34,11 @@ WP* new_up()
 		cwp->next = nwp;
 	}
 	nwp->next = NULL;
-	Log("the head link contains:\n");
+	Log("the head link contains:%d",head->NO);
 	cwp = head;
-	while (cwp->next != NULL || cwp == head)
+	while (cwp->next != NULL)
 	{	
-		Log("NO.%d",cwp->NO);
+		Log("NO.%d  ",cwp->NO);
 		cwp = cwp->next;
 	}
 	Log("\n");
