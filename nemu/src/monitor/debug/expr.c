@@ -111,8 +111,12 @@ bool isOperator(int p)
 		case (TK_MINUS):
 			return 1;
 		case (TK_TIMES):
+		{
 			if (p > 0 && !isOperator(p-1))
 				return 1;
+			else
+				return 0;
+		}
 		case (TK_DIV):
 			return 1;
 		case (TK_EQ):
