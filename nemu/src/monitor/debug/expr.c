@@ -12,9 +12,10 @@ enum {
   TK_TIMES = 42, TK_DIV = 47,
   TK_lpar = 28, TK_rpar = 29,
   TK_HEX = 127, TK_DEX = 129,
-  TK_REG = 1,TK_ADDR = 3,
+  TK_REG = 1,
   TK_NEQ = 5, TK_AND = 13,
-  TK_OR = 31
+  TK_OR = 31, TK_NOT= 4,
+  TK_REF = 10
   /* TODO: Add more token types */
 
 };
@@ -30,8 +31,8 @@ static struct rule {
   {"\\)", TK_rpar},          // right parenthesis
   {"\\(", TK_lpar},          // left parenthesis
   {"/", TK_DIV},         // divide
-  {"\\*0x[0123456789abcde]+",TK_ADDR},	//address
   {"\\*", TK_TIMES},         // times
+  {"\\*", TK_REF},	//reference
   {"-", TK_MINUS},         // minus
   {" +", TK_NOTYPE},    // spaces
   {"\\+", TK_PLUS},         // plus
@@ -44,7 +45,8 @@ static struct rule {
   {"\\$eip",TK_REG},		//register(eip)
   {"!=",TK_NEQ},	//not equal
   {"&&",TK_AND},	//and
-  {"||",TK_OR}		//or
+  {"||",TK_OR},		//or
+  {"!",TK_NOT}		//not
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -100,6 +102,32 @@ bool higherLevel(int TK_type_1, int TK_type_2)
 	return 0;
 }
 
+bool isOperator(int p)
+{
+	switch (tokens[p].type)
+	{
+		case (TK_PLUS):
+			return 1;
+		case (TK_MINUS):
+			return 1;
+		case (TK_TIMES):
+			if (p > 0 && !isOperator(p-1))
+				return 1;
+		case (TK_DIV):
+			return 1;
+		case (TK_EQ):
+			return 1;
+		case (TK_NEQ):
+			return 1;
+		case (TK_AND):
+			return 1;
+		case (TK_OR):
+			return 1;
+		default:
+			return 0;
+	}
+	return 0;
+}
 uint32_t regToVal(int p)
 {
 	if (strcmp(tokens[p].str,"$eax") == 0)
@@ -122,6 +150,7 @@ uint32_t regToVal(int p)
 		return cpu.eip;
 	return 0;
 }
+uint32_t eval(int p, int q);
 
 uint32_t hexToVal(int p)
 {
@@ -147,17 +176,10 @@ uint32_t dexToVal(int p)
 	return n;
 }
 
-uint32_t addrToVal(int p)
+uint32_t addrToVal(int p, int q)
 {
-	int i;
 	uint32_t n;
-	n = 0;
-	for (i = 3; i < strlen(tokens[p].str); i++)
-	{
-		if (tokens[p].str[i] > '9')
-			n = n * 16 + (int)tokens[p].str[i] - 87;
-		else n = n * 16 + (int)tokens[p].str[i] - 48;
-	}
+	n = eval(p,q);
 	return vaddr_read(n,4);
 }
 
@@ -171,21 +193,31 @@ uint32_t eval(int p,int q)
 			return hexToVal(p);
 		else if (tokens[p].type == TK_DEX)
 			return dexToVal(p);
-		else if (tokens[p].type == TK_ADDR)
-			return addrToVal(p);
 		return 0;
 	}
 	else if (tokens[p].type == TK_lpar && tokens[q].type == TK_rpar)
 	{
 		return eval(p+1,q-1);
 	}
+	else if (tokens[p].type == TK_NOT || tokens[p].type == TK_TIMES)
+	{
+		if (tokens[p].type == TK_NOT)
+			return (eval(p + 1, q) == 0);
+		if (tokens[p].type == TK_TIMES)
+		{
+			tokens[p].type = TK_REF;
+			return addrToVal(p + 1, q);
+		}
+		return 0;
+	}
+
 	int i,domain,Inpair,domainTri;
 	domain = 0;
 	Inpair = 0;
 	domainTri = 0;
 	for (i = p; i <= q; i++)
 	{
-		if (Inpair == 0 && higherLevel(domain,tokens[i].type))
+		if (Inpair == 0 && higherLevel(domain,tokens[i].type) && isOperator(i))
 		{
 			domain = tokens[i].type;
 			domainTri = i;
@@ -251,12 +283,6 @@ static bool make_token(char *e) {
 		case TK_REG:
 		{
 			for (int j = 0; j < substr_len; j++)
-				tokens[nr_token].str[j] = substr_start[j];
-			tokens[nr_token].str[substr_len] = '\0';
-		}
-		case TK_ADDR:
-		{
-			for (int j = 0; j <substr_len; j++)
 				tokens[nr_token].str[j] = substr_start[j];
 			tokens[nr_token].str[substr_len] = '\0';
 		}
