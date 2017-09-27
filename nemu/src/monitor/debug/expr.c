@@ -179,6 +179,7 @@ uint32_t dexToVal(int p)
 uint32_t addrToVal(int p, int q)
 {
 	uint32_t n;
+	Log("p = %d   q = %d\n",p,q);
 	n = eval(p,q);
 	Log("n = %d\n",n);
 	return vaddr_read(n,4);
