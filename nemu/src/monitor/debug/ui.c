@@ -134,6 +134,7 @@ static int cmd_d(char *args) {
 		if (wp->NO == n)
 		{
 			free_wp(wp);
+			Log("the watchpoint to be deleted is %d\n",wp->NO);
 			break;
 		}
 		wp = print_wp(wp);
