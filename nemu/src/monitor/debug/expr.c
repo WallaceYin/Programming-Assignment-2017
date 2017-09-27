@@ -199,18 +199,6 @@ uint32_t eval(int p,int q)
 	{
 		return eval(p+1,q-1);
 	}
-	else if (tokens[p].type == TK_NOT || tokens[p].type == TK_TIMES)
-	{
-		if (tokens[p].type == TK_NOT)
-			return (eval(p + 1, q) == 0);
-		if (tokens[p].type == TK_TIMES)
-		{
-			tokens[p].type = TK_REF;
-			return addrToVal(p + 1, q);
-		}
-		return 0;
-	}
-
 	int i,domain,Inpair,domainTri;
 	domain = 0;
 	Inpair = 0;
@@ -243,6 +231,16 @@ uint32_t eval(int p,int q)
 		return (eval(p, domainTri - 1) && eval(domainTri + 1,q));
 	if (domain == TK_OR)
 		return (eval(p, domainTri - 1) || eval(domainTri + 1,q));
+	if (domain == 0)
+	{
+		if (tokens[p].type == TK_NOT)
+			return (eval(p + 1, q) == 0);
+		if (tokens[p].type == TK_TIMES)
+		{
+			tokens[p].type = TK_REF;
+			return addrToVal(p + 1, q);
+		}
+	}
 	return 0;
 }
 
