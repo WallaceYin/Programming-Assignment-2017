@@ -38,6 +38,7 @@ WP* new_up()
 
 void free_wp(WP *wp)
 {
+	Log("the watchpoint to be freed is %d\n",wp->NO);
 	WP* cwp;
 	cwp = head;
 	bool fd = 0;
@@ -74,7 +75,10 @@ void free_wp(WP *wp)
 	while (cwp->next != NULL)
 		cwp = cwp->next;
 	if (fd)
+	{
 		cwp->next = wp;
+		wp->next = NULL;
+	}
 	return;
 }
 
