@@ -118,6 +118,8 @@ uint32_t regToVal(int p)
 		return cpu.esi;
 	if (strcmp(tokens[p].str,"$edi") == 0)
 		return cpu.edi;
+	if (strcmp(tokens[p].str,"$eip") == 0)
+		return cpu.eip;
 	return 0;
 }
 
