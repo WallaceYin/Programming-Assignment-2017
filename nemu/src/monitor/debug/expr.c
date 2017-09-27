@@ -234,6 +234,7 @@ uint32_t eval(int p,int q)
 		return (eval(p, domainTri - 1) || eval(domainTri + 1,q));
 	if (domain == 0)
 	{
+		Log("domain = %d\n",domain);
 		if (tokens[p].type == TK_NOT)
 			return (eval(p + 1, q) == 0);
 		if (tokens[p].type == TK_TIMES)
@@ -288,7 +289,6 @@ static bool make_token(char *e) {
 		}
 	}
 	nr_token ++;
-	Log("nr_token = %d\n",nr_token);
         break;
 
       }
