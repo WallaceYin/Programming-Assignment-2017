@@ -119,6 +119,10 @@ bool higherLevel(int TK_type_1, int TK_type_2)
 			return 1;
 		if (TK_type_2 == TK_TIMES || TK_type_2 == TK_DIV)
 			return 1;
+		if (TK_type_2 == TK_EQ || TK_type_2 == TK_NEQ)
+			return 1;
+		if (TK_type_2 == TK_AND || TK_type_2 == TK_OR)
+			return 1;
 	}
 	return 0;
 }
