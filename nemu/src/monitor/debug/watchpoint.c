@@ -21,18 +21,27 @@ void init_wp_pool() {
 WP* new_up()
 {
 	WP* nwp;
+	WP* cwp;
 	nwp = free_;
 	free_ = free_->next;
 	if (head == NULL)
 		head = nwp;
 	else 
 	{
-		WP* cwp = head;
+		cwp = head;
 		while (cwp->next != NULL)
 			cwp = cwp->next;
 		cwp->next = nwp;
 	}
 	nwp->next = NULL;
+	Log("the head link contains:\n");
+	cwp = head;
+	while (cwp->next != NULL)
+	{	
+		Log("NO.%d",cwp->NO);
+		cwp = cwp->next;
+	}
+	Log("\n");
 	return nwp;
 }
 
