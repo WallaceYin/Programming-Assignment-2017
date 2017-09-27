@@ -34,7 +34,7 @@ WP* new_up()
 		cwp->next = nwp;
 	}
 	nwp->next = NULL;
-	Log("the head link contains:%d",head->NO);
+	Log("the head link contains:");
 	cwp = head;
 	while (cwp->next != NULL)
 	{	
@@ -61,9 +61,9 @@ void free_wp(WP *wp)
 			wp->next = NULL;
 		}
 		fd = 1;
-	}
+	}//the watchpoint we wanna remove is on the head position
 	else
-		while (cwp != NULL)
+		while (cwp->next != NULL)
 		{
 			if (cwp->next == wp)
 			{
@@ -80,6 +80,7 @@ void free_wp(WP *wp)
 			else
 				cwp = cwp->next;
 		}
+	//Remove the watchpoints in the detected list
 	cwp = free_;
 	while (cwp->next != NULL)
 		cwp = cwp->next;
