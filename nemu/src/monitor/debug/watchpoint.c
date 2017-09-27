@@ -46,10 +46,10 @@ void free_wp(WP *wp)
 	{
 		Log("find watchpoint1 %d\n",wp->NO);
 		if (wp->next == NULL)
-			cwp = NULL;
+			head = NULL;
 		else 
 		{
-			cwp = wp->next;
+			head = wp->next;
 			wp->next = NULL;
 		}
 		fd = 1;
