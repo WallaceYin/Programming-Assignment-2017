@@ -180,6 +180,7 @@ uint32_t addrToVal(int p, int q)
 {
 	uint32_t n;
 	n = eval(p,q);
+	Log("n = %d\n",n);
 	return vaddr_read(n,4);
 }
 
