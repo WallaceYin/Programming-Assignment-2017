@@ -86,10 +86,31 @@ bool higherLevel(int TK_type_1, int TK_type_2)
 			return 1;
 		if (TK_type_2 == TK_TIMES || TK_type_2 == TK_DIV)
 			return 1;
+		if (TK_type_2 == TK_EQ || TK_type_2 == TK_NEQ)
+			return 1;
+		if (TK_type_2 == TK_AND || TK_type_2 == TK_OR)
+			return 1;
+
 	}
 	if (TK_type_1 == TK_PLUS || TK_type_1 == TK_MINUS)
 	{
 		if (TK_type_2 == TK_PLUS || TK_type_2 == TK_MINUS)
+			return 1;
+		if (TK_type_2 == TK_EQ || TK_type_2 == TK_NEQ)
+			return 1;
+		if (TK_type_2 == TK_AND || TK_type_2 == TK_OR)
+			return 1;
+	}
+	if (TK_type_1 == TK_EQ || TK_type_1 == TK_NEQ)
+	{
+		if (TK_type_2 == TK_EQ || TK_type_2 == TK_NEQ)
+			return 1;
+		if (TK_type_2 == TK_AND || TK_type_2 == TK_OR)
+			return 1;
+	}
+	if (TK_type_1 == TK_AND || TK_type_1 == TK_OR)
+	{
+		if (TK_type_2 == TK_AND || TK_type_2 == TK_OR)
 			return 1;
 	}
 	if (TK_type_1 == 0)
@@ -183,9 +204,7 @@ uint32_t dexToVal(int p)
 uint32_t addrToVal(int p, int q)
 {
 	uint32_t n;
-	Log("p = %d   q = %d\n",p,q);
 	n = eval(p,q);
-	Log("n = %d\n",n);
 	return vaddr_read(n,4);
 }
 
