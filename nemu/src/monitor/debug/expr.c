@@ -239,12 +239,10 @@ uint32_t eval(int p,int q)
 		return (eval(p, domainTri - 1) || eval(domainTri + 1,q));
 	if (domain == 0)
 	{
-		Log("domain = %d\n",domain);
 		if (tokens[p].type == TK_NOT)
 			return (eval(p + 1, q) == 0);
 		if (tokens[p].type == TK_TIMES)
 		{
-			Log("tokens[p+1].str = %s\n",tokens[p + 1].str);
 			tokens[p].type = TK_REF;
 			return addrToVal(p + 1, q);
 		}
@@ -313,7 +311,6 @@ uint32_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-  Log("nr_token = %d\n",nr_token);
   uint32_t ans = eval(0, nr_token-1);
     *success = true;
   /* TODO: Insert codes to evaluate the expression. */
