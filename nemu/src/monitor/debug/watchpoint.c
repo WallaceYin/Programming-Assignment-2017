@@ -34,14 +34,6 @@ WP* new_up()
 		cwp->next = nwp;
 	}
 	nwp->next = NULL;
-	Log("the head link contains:");
-	cwp = head;
-	while (cwp->next != NULL)
-	{	
-		Log("NO.%d  ",cwp->NO);
-		cwp = cwp->next;
-	}
-	Log("\n");
 	return nwp;
 }
 
@@ -52,7 +44,7 @@ void free_wp(WP *wp)
 	bool fd = 0;
 	if (cwp == wp)
 	{
-		Log("find watchpoint %d\n",wp->NO);
+		Log("find watchpoint1 %d\n",wp->NO);
 		if (wp->next == NULL)
 			cwp = NULL;
 		else 
@@ -67,7 +59,7 @@ void free_wp(WP *wp)
 		{
 			if (cwp->next == wp)
 			{
-				Log("find watchpoint %d\n",wp->NO);
+				Log("find watchpoint2 %d\n",wp->NO);
 				if (wp->next == NULL)
 					cwp->next = NULL;
 				else
