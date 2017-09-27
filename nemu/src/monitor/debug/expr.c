@@ -38,7 +38,10 @@ static struct rule {
   {"==", TK_EQ},         // equal
   {"[1-9]+[0-9]*",TK_DEX},    //dexnumber
   {"0x[0123456789abcde]+",TK_HEX},    //hexnumber
-  {"\\$e[a-z]+",TK_REG},	//register
+  {"\\$e[abcd]x",TK_REG},	//register(eax, ebx, ecx,edx)
+  {"\\$e[sb]p",TK_REG}, 	//register(esp, ebp)
+  {"\\$e[sd]i",TK_REG},		//register(edi, esi)
+  {"\\$eip",TK_REG},		//register(eip)
   {"!=",TK_NEQ},	//not equal
   {"&&",TK_AND},	//and
   {"||",TK_OR}		//or
