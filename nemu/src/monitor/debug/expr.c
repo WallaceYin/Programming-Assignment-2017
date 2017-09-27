@@ -288,6 +288,7 @@ static bool make_token(char *e) {
 		}
 	}
 	nr_token ++;
+	Log("nr_token = %d\n",nr_token);
         break;
 
       }
