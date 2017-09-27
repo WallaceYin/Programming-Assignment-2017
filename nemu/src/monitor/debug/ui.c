@@ -73,7 +73,7 @@ static int cmd_info(char *args) {
 		while (wp != NULL)
 		{
 			printf("%2d\t%u\t%s\n",wp->NO, wp->Val, wp->exp);
-			wp = wp->next;
+			wp = print_wp(wp);
 		}
 	}
 	else printf("Unknown command '%s'\n",arg);
