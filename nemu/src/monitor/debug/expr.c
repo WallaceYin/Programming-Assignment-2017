@@ -239,7 +239,7 @@ uint32_t eval(int p,int q)
 			return (eval(p + 1, q) == 0);
 		if (tokens[p].type == TK_TIMES)
 		{
-			Log("tokens[p+1].str = %s\n",tokens[p].str);
+			Log("tokens[p+1].str = %s\n",tokens[p + 1].str);
 			tokens[p].type = TK_REF;
 			return addrToVal(p + 1, q);
 		}
