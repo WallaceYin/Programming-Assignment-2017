@@ -125,60 +125,90 @@ make_rtl_setget_eflags(ZF)
 make_rtl_setget_eflags(SF)
 
 static inline void rtl_mv(rtlreg_t* dest, const rtlreg_t *src1) {
-  // dest <- src1
-  TODO();
+  // dest <- src
+  *dest = *src1;
 }
 
 static inline void rtl_not(rtlreg_t* dest) {
   // dest <- ~dest
-  TODO();
+  *dest = ~(*dest);
 }
+static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width);
 
 static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- signext(src1[(width * 8 - 1) .. 0])
-  TODO();
+  rtl_msb(&t0, src1, width);
+  if (t0)
+    switch (width) {
+      case 1: *dest = 0xffffff00 | *src1;
+      case 2: *dest = 0xffff0000 | *src1;
+    }
+  else
+    *dest = *src1;
 }
 
 static inline void rtl_push(const rtlreg_t* src1) {
   // esp <- esp - 4
   // M[esp] <- src1
-  TODO();
+  cpu.esp = cpu.esp - 4;
+  rtl_sm(&cpu.esp, 4, src1);
 }
 
 static inline void rtl_pop(rtlreg_t* dest) {
   // dest <- M[esp]
   // esp <- esp + 4
-  TODO();
+  rtl_lm(dest, &cpu.esp, 4);
 }
 
 static inline void rtl_eq0(rtlreg_t* dest, const rtlreg_t* src1) {
   // dest <- (src1 == 0 ? 1 : 0)
-  TODO();
+  if (*src1 == 0)
+    *dest = 1;
+  else
+    *dest = 0;
 }
 
 static inline void rtl_eqi(rtlreg_t* dest, const rtlreg_t* src1, int imm) {
   // dest <- (src1 == imm ? 1 : 0)
-  TODO();
+  if (*src1 == imm)
+    *dest = 1;
+  else
+    *dest = 0;
 }
 
 static inline void rtl_neq0(rtlreg_t* dest, const rtlreg_t* src1) {
   // dest <- (src1 != 0 ? 1 : 0)
-  TODO();
+  if (*src1 == 0)
+    *dest = 0;
+  else
+    *dest = 1;
 }
 
 static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- src1[width * 8 - 1]
-  TODO();
+  switch (width) {
+    case 1: t0 = ((*src1 & 0x00000080) > 0);
+    case 2: t0 = ((*src1 & 0x00080000) > 0);
+    case 4: t0 = ((*src1 & 0x80000000) > 0);
+  }
+  *dest = t0;
 }
 
 static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
-  TODO();
+  switch (width) {
+    case 1: t1 = *result & 0x000000ff;
+    case 2: t1 = *result & 0x0000ffff;
+    case 4: t1 = *result & 0xffffffff;
+  }
+  if (t1 == 0)
+    cpu.eflags = cpu.eflags | 0x00000040;
 }
 
 static inline void rtl_update_SF(const rtlreg_t* result, int width) {
   // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
-  TODO();
+  rtl_msb(&t0, result, width);
+  cpu.eflags = (t0) ? (cpu.eflags | 0x00000080) : (cpu.eflags | 0);
 }
 
 static inline void rtl_update_ZFSF(const rtlreg_t* result, int width) {

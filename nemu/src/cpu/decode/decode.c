@@ -38,6 +38,7 @@ static inline make_DopHelper(SI) {
    *
    op->simm = ???
    */
+  op->simm = instr_fetch(eip, op->width);
   TODO();
 
   rtl_li(&op->val, op->simm);
@@ -265,6 +266,7 @@ make_DHelper(J) {
   // the target address can be computed in the decode stage
   decoding.jmp_eip = id_dest->simm + *eip;
 }
+
 
 make_DHelper(push_SI) {
   decode_op_SI(eip, id_dest, true);

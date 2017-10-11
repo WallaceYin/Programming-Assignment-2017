@@ -7,25 +7,23 @@ make_EHelper(mov) {
 
 make_EHelper(push) {
   TODO();
-
   print_asm_template1(push);
 }
 
 make_EHelper(pop) {
   TODO();
-
   print_asm_template1(pop);
 }
 
 make_EHelper(pusha) {
-  TODO();
-
+  rtl_lr_l(&t0,0);
+  rtl_push(&t0);
   print_asm("pusha");
 }
 
 make_EHelper(popa) {
-  TODO();
-
+  rtl_pop(&t0);
+  rtl_sr_l(0,&t0);
   print_asm("popa");
 }
 
