@@ -3,6 +3,7 @@
 make_EHelper(mov) {
   Log("push\n");
   operand_write(id_dest, &id_src->val);
+  Log("id_src->val =%d",id_src->val);
   print_asm_template2(mov);
   Log("%s\n",decoding.assembly);
 }
