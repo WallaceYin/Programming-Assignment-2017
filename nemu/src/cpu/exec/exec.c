@@ -25,9 +25,12 @@ static inline void idex(vaddr_t *eip, opcode_entry *e) {
   /* eip is pointing to the byte next to opcode */
   Log("eip = 0x%8x", *eip);
   if (e->decode)
+  {
+    Log("try");
     e->decode(eip);
+    Log("success");
+  }
   e->execute(eip);
-  Log("successful");
 }
 
 static make_EHelper(2byte_esc);
