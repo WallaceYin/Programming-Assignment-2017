@@ -13,11 +13,11 @@ typedef struct {
 #define EX(ex)             EXW(ex, 0)
 #define EMPTY              EX(inv)
 
-static inline void set_width(int* width) {
-  if (*width == 0) {
-    *width = decoding.is_operand_size_16 ? 2 : 4;
+static inline void set_width(int width) {
+  if (width == 0) {
+    width = decoding.is_operand_size_16 ? 2 : 4;
   }
-  decoding.src.width = decoding.dest.width = decoding.src2.width = *width;
+  decoding.src.width = decoding.dest.width = decoding.src2.width = width;
 }
 
 /* Instruction Decode and EXecute */
@@ -25,7 +25,11 @@ static inline void idex(vaddr_t *eip, opcode_entry *e) {
   /* eip is pointing to the byte next to opcode */
   Log("eip = 0x%8x", *eip);
   if (e->decode)
+  {
+    Log("before decode");
     e->decode(eip);
+    Log("after decode");
+  }
   e->execute(eip);
 }
 
@@ -208,7 +212,7 @@ opcode_entry opcode_table [512] = {
 static make_EHelper(2byte_esc) {
   uint32_t opcode = instr_fetch(eip, 1) | 0x100;
   decoding.opcode = opcode;
-  set_width(&opcode_table[opcode].width);
+  set_width(opcode_table[opcode].width);
   idex(eip, &opcode_table[opcode]);
 }
 
@@ -216,7 +220,7 @@ make_EHelper(real) {
   uint32_t opcode = instr_fetch(eip, 1);
   decoding.opcode = opcode;
   Log("opcode = 0x%x\t",opcode);
-  set_width(&opcode_table[opcode].width);
+  set_width(opcode_table[opcode].width);
   Log("width = 0x%x\n",opcode_table[opcode].width);
   idex(eip, &opcode_table[opcode]);
 }
