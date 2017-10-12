@@ -26,8 +26,8 @@ void cpu_exec(uint64_t n) {
   for (; n > 0; n --) {
     /* Execute one instruction, including instruction fetch,
      * instruction decode, and the actual execution. */
+     Log("Step into exec_wrapper");
     exec_wrapper(print_flag);
-
 #ifdef DEBUG
     if (!check_wp())
     {
@@ -39,7 +39,7 @@ void cpu_exec(uint64_t n) {
     extern void device_update();
     device_update();
 #endif
-	
+
     if (nemu_state != NEMU_RUNNING) { return; }
   }
 
