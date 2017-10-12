@@ -14,6 +14,7 @@ const rtlreg_t tzero = 0;
 static inline make_DopHelper(I) {
   /* eip here is pointing to the immediate */
   op->type = OP_TYPE_IMM;
+  Log("successful");
   op->imm = instr_fetch(eip, op->width);
   rtl_li(&op->val, op->imm);
 
