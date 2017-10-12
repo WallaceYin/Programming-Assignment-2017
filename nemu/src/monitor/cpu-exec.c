@@ -26,9 +26,7 @@ void cpu_exec(uint64_t n) {
   for (; n > 0; n --) {
     /* Execute one instruction, including instruction fetch,
      * instruction decode, and the actual execution. */
-     Log("Step into exec_wrapper");
     exec_wrapper(print_flag);
-    Log("Step out exec_wrapper");
 #ifdef DEBUG
     if (!check_wp())
     {

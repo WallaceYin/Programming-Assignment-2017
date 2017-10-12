@@ -214,7 +214,9 @@ static make_EHelper(2byte_esc) {
 make_EHelper(real) {
   uint32_t opcode = instr_fetch(eip, 1);
   decoding.opcode = opcode;
+  Log("opcode = 0x%x\t",opcode);
   set_width(opcode_table[opcode].width);
+  Log("width = 0x%x\n",opcode_table[opcode].width);
   idex(eip, &opcode_table[opcode]);
 }
 
