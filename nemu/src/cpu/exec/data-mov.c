@@ -1,12 +1,14 @@
 #include "cpu/exec.h"
 
 make_EHelper(mov) {
+  Log("push\n");
   operand_write(id_dest, &id_src->val);
   print_asm_template2(mov);
   Log("%s\n",decoding.assembly);
 }
 
 make_EHelper(push) {
+  Log("push\n");
   rtl_lr(&t2,id_dest->reg,4);
   rtl_push(&t2);
   print_asm_template1(push);
@@ -14,6 +16,7 @@ make_EHelper(push) {
 }
 
 make_EHelper(pop) {
+  Log("push\n");
   rtl_pop(&t2);
   rtl_sr(id_dest->reg,4,&t2);
   print_asm_template1(pop);
