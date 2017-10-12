@@ -9,6 +9,7 @@ make_EHelper(push) {
   rtl_lr(&t2,id_dest->reg,4);
   rtl_push(&t2);
   print_asm_template1(push);
+  Log("%s\n",decoding.assembly);
 }
 
 make_EHelper(pop) {
