@@ -73,7 +73,15 @@ extern DecodeInfo decoding;
 
 #define make_DHelper(name) void concat(decode_, name) (vaddr_t *eip)
 typedef void (*DHelper) (vaddr_t *);
-
+/*
+A direct address
+I immediate data
+E general register or memory address
+R general register
+G general register
+SI signed immediate
+J indirect address
+*/
 make_DHelper(I2E);
 make_DHelper(I2a);
 make_DHelper(I2r);

@@ -6,24 +6,24 @@ make_EHelper(mov) {
 }
 
 make_EHelper(push) {
-  TODO();
+  rtl_lr(&t2,id_dest->reg,4);
+  rtl_push(&t2);
   print_asm_template1(push);
 }
 
 make_EHelper(pop) {
-  TODO();
+  rtl_pop(&t2);
+  rtl_sr(id_dest->reg,4,&t2);
   print_asm_template1(pop);
 }
 
 make_EHelper(pusha) {
-  rtl_lr_l(&t0,0);
-  rtl_push(&t0);
+  TODO();
   print_asm("pusha");
 }
 
 make_EHelper(popa) {
-  rtl_pop(&t0);
-  rtl_sr_l(0,&t0);
+  TODO();
   print_asm("popa");
 }
 
