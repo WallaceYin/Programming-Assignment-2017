@@ -27,6 +27,7 @@ static inline void idex(vaddr_t *eip, opcode_entry *e) {
   if (e->decode)
     e->decode(eip);
   e->execute(eip);
+  Log("successful");
 }
 
 static make_EHelper(2byte_esc);
