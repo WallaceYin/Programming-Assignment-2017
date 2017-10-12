@@ -169,8 +169,11 @@ make_DHelper(I2r) {
 }
 
 make_DHelper(mov_I2r) {
+  Log("step1");
   decode_op_r(eip, id_dest, false);
+  Log("step2");
   decode_op_I(eip, id_src, true);
+  Log("step3");
 }
 
 /* used by unary operations */

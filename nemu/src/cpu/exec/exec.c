@@ -26,9 +26,7 @@ static inline void idex(vaddr_t *eip, opcode_entry *e) {
   Log("eip = 0x%8x", *eip);
   if (e->decode)
   {
-    Log("try");
     e->decode(eip);
-    Log("success");
   }
   e->execute(eip);
 }
