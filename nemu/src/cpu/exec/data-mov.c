@@ -1,7 +1,7 @@
 #include "cpu/exec.h"
 
 make_EHelper(mov) {
-  Log("push\n");
+  Log("mov\n");
   operand_write(id_dest, &id_src->val);
   Log("id_src->val =%d",id_src->val);
   print_asm_template2(mov);
@@ -17,7 +17,7 @@ make_EHelper(push) {
 }
 
 make_EHelper(pop) {
-  Log("push\n");
+  Log("pop\n");
   rtl_pop(&t2);
   rtl_sr(id_dest->reg,4,&t2);
   print_asm_template1(pop);

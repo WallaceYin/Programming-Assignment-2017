@@ -14,7 +14,6 @@ const rtlreg_t tzero = 0;
 static inline make_DopHelper(I) {
   /* eip here is pointing to the immediate */
   op->type = OP_TYPE_IMM;
-  Log("successful");
   op->imm = instr_fetch(eip, op->width);
   rtl_li(&op->val, op->imm);
 
@@ -110,10 +109,12 @@ static inline make_DopHelper(O) {
  * Ev <- Gv
  */
 make_DHelper(G2E) {
+  Log("DHelper G2E");
   decode_op_rm(eip, id_dest, true, id_src, true);
 }
 
 make_DHelper(mov_G2E) {
+  Log("DHelper mov_G2E");
   decode_op_rm(eip, id_dest, false, id_src, true);
 }
 
@@ -121,14 +122,17 @@ make_DHelper(mov_G2E) {
  * Gv <- Ev
  */
 make_DHelper(E2G) {
+  Log("DHelper E2G");
   decode_op_rm(eip, id_src, true, id_dest, true);
 }
 
 make_DHelper(mov_E2G) {
+  Log("DHelper mov_E2G");
   decode_op_rm(eip, id_src, true, id_dest, false);
 }
 
 make_DHelper(lea_M2G) {
+  Log("DHelper lea_M2G");
   decode_op_rm(eip, id_src, false, id_dest, false);
 }
 
@@ -136,6 +140,7 @@ make_DHelper(lea_M2G) {
  * eAX <- Iv
  */
 make_DHelper(I2a) {
+  Log("DHelper lea_I2a");
   decode_op_a(eip, id_dest, true);
   decode_op_I(eip, id_src, true);
 }
@@ -144,6 +149,7 @@ make_DHelper(I2a) {
  * Gv <- EvIv
  * use for imul */
 make_DHelper(I_E2G) {
+  Log("DHelper I_E2G");
   decode_op_rm(eip, id_src2, true, id_dest, false);
   decode_op_I(eip, id_src, true);
 }
@@ -152,11 +158,13 @@ make_DHelper(I_E2G) {
  * Ev <- Iv
  */
 make_DHelper(I2E) {
+  Log("DHelper I2E");
   decode_op_rm(eip, id_dest, true, NULL, false);
   decode_op_I(eip, id_src, true);
 }
 
 make_DHelper(mov_I2E) {
+  Log("mov_I2E");
   decode_op_rm(eip, id_dest, false, NULL, false);
   decode_op_I(eip, id_src, true);
 }
@@ -165,41 +173,46 @@ make_DHelper(mov_I2E) {
  * eXX <- Iv
  */
 make_DHelper(I2r) {
+  Log("DHelper I2R");
   decode_op_r(eip, id_dest, true);
   decode_op_I(eip, id_src, true);
 }
 
 make_DHelper(mov_I2r) {
-  Log("step1");
+  Log("DHelper mov_I2r");
   decode_op_r(eip, id_dest, false);
-  Log("step2");
   decode_op_I(eip, id_src, true);
-  Log("step3");
 }
 
 /* used by unary operations */
 make_DHelper(I) {
+  Log("DHelper I");
   decode_op_I(eip, id_dest, true);
 }
 
 make_DHelper(r) {
+  Log("DHelper r");
   decode_op_r(eip, id_dest, true);
 }
 
 make_DHelper(E) {
+  Log("DHelper E");
   decode_op_rm(eip, id_dest, true, NULL, false);
 }
 
 make_DHelper(gp7_E) {
+  Log("DHelper gp7_E");
   decode_op_rm(eip, id_dest, false, NULL, false);
 }
 
 /* used by test in group3 */
 make_DHelper(test_I) {
+  Log("DHelper test_I");
   decode_op_I(eip, id_src, true);
 }
 
 make_DHelper(SI2E) {
+  Log("DHelper SI2E");
   assert(id_dest->width == 2 || id_dest->width == 4);
   decode_op_rm(eip, id_dest, true, NULL, false);
   id_src->width = 1;
@@ -210,6 +223,7 @@ make_DHelper(SI2E) {
 }
 
 make_DHelper(SI_E2G) {
+  Log("DHelper SI_E2G");
   assert(id_dest->width == 2 || id_dest->width == 4);
   decode_op_rm(eip, id_src2, true, id_dest, false);
   id_src->width = 1;
@@ -220,6 +234,7 @@ make_DHelper(SI_E2G) {
 }
 
 make_DHelper(gp2_1_E) {
+  Log("DHelper gp2_1_E");
   decode_op_rm(eip, id_dest, true, NULL, false);
   id_src->type = OP_TYPE_IMM;
   id_src->imm = 1;
@@ -230,6 +245,7 @@ make_DHelper(gp2_1_E) {
 }
 
 make_DHelper(gp2_cl2E) {
+  Log("DHelper gp2_cl2E");
   decode_op_rm(eip, id_dest, true, NULL, false);
   id_src->type = OP_TYPE_REG;
   id_src->reg = R_CL;
@@ -240,6 +256,7 @@ make_DHelper(gp2_cl2E) {
 }
 
 make_DHelper(gp2_Ib2E) {
+  Log("DHelper gp2_Ib2E");
   decode_op_rm(eip, id_dest, true, NULL, false);
   id_src->width = 1;
   decode_op_I(eip, id_src, true);
@@ -248,22 +265,26 @@ make_DHelper(gp2_Ib2E) {
 /* Ev <- GvIb
  * use for shld/shrd */
 make_DHelper(Ib_G2E) {
+  Log("DHelper Ib_G2E");
   decode_op_rm(eip, id_dest, true, id_src2, true);
   id_src->width = 1;
   decode_op_I(eip, id_src, true);
 }
 
 make_DHelper(O2a) {
+  Log("DHelper 02a");
   decode_op_O(eip, id_src, true);
   decode_op_a(eip, id_dest, false);
 }
 
 make_DHelper(a2O) {
+  Log("DHelper a20");
   decode_op_a(eip, id_src, true);
   decode_op_O(eip, id_dest, false);
 }
 
 make_DHelper(J) {
+  Log("DHelper J");
   decode_op_SI(eip, id_dest, false);
   // the target address can be computed in the decode stage
   decoding.jmp_eip = id_dest->simm + *eip;
@@ -271,16 +292,19 @@ make_DHelper(J) {
 
 
 make_DHelper(push_SI) {
+  Log("DHelper push_SI");
   decode_op_SI(eip, id_dest, true);
 }
 
 make_DHelper(in_I2a) {
+  Log("DHelper in_I2a");
   id_src->width = 1;
   decode_op_I(eip, id_src, true);
   decode_op_a(eip, id_dest, false);
 }
 
 make_DHelper(in_dx2a) {
+  Log("DHelper in_dx2a");
   id_src->type = OP_TYPE_REG;
   id_src->reg = R_DX;
   rtl_lr_w(&id_src->val, R_DX);
@@ -292,12 +316,14 @@ make_DHelper(in_dx2a) {
 }
 
 make_DHelper(out_a2I) {
+  Log("DHelper out_a2I");
   decode_op_a(eip, id_src, true);
   id_dest->width = 1;
   decode_op_I(eip, id_dest, true);
 }
 
 make_DHelper(out_a2dx) {
+  Log("DHelper out_a2dx");
   decode_op_a(eip, id_src, true);
 
   id_dest->type = OP_TYPE_REG;
