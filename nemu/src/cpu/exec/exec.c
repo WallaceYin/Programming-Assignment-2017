@@ -18,6 +18,7 @@ static inline void set_width(int width) {
     width = decoding.is_operand_size_16 ? 2 : 4;
   }
   decoding.src.width = decoding.dest.width = decoding.src2.width = width;
+  Log("width = %d",width);
 }
 
 /* Instruction Decode and EXecute */
@@ -26,9 +27,7 @@ static inline void idex(vaddr_t *eip, opcode_entry *e) {
   Log("eip = 0x%8x", *eip);
   if (e->decode)
   {
-    Log("before decode");
     e->decode(eip);
-    Log("after decode");
   }
   e->execute(eip);
 }
@@ -222,7 +221,6 @@ make_EHelper(real) {
   decoding.opcode = opcode;
   Log("opcode = 0x%x\t",opcode);
   set_width(opcode_table[opcode].width);
-  Log("width = 0x%x\n",opcode_table[opcode].width);
   idex(eip, &opcode_table[opcode]);
 }
 
