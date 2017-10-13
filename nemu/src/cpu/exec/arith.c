@@ -9,6 +9,7 @@ make_EHelper(add) {
 make_EHelper(sub) {
   rtl_mv(&t1,&id_dest->val);
   rtl_sub(&id_dest->val, &t1, &id_src->val);
+  Log("id_dest = %d\t id_src = %d",id_dest->val,id_src->val);
   print_asm_template2(sub);
 }
 
