@@ -53,8 +53,8 @@ typedef struct {
       uint32_t PF:1;
       uint32_t :1;
       uint32_t CF:1;
-    };
-    rtlreg_t eflags;
+    } eflags;
+    rtlreg_t eflags_init;
   };
 } CPU_state;
 

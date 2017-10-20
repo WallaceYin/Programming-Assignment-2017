@@ -111,13 +111,18 @@ static inline void rtl_sr(int r, int width, const rtlreg_t* src1) {
   }
 }
 
+#define eflags_CF (cpu.eflags.CF)
+#define eflags_OF (cpu.eflags.OF)
+#define eflags_ZF (cpu.eflags.ZF)
+#define eflags_SF (cpu.eflags.SF)
+
 #define make_rtl_setget_eflags(f) \
   static inline void concat(rtl_set_, f) (const rtlreg_t* src) { \
-    TODO(); \
+    concat(eflags_, f)= *src & 0x1;\
   } \
   static inline void concat(rtl_get_, f) (rtlreg_t* dest) { \
-    TODO(); \
-  }
+    *dest = concat(eflags_,f); \
+  } \
 
 make_rtl_setget_eflags(CF)
 make_rtl_setget_eflags(OF)
@@ -188,28 +193,31 @@ static inline void rtl_neq0(rtlreg_t* dest, const rtlreg_t* src1) {
 static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- src1[width * 8 - 1]
   switch (width) {
-    case 1: t0 = ((*src1 & 0x00000080) > 0);
-    case 2: t0 = ((*src1 & 0x00080000) > 0);
-    case 4: t0 = ((*src1 & 0x80000000) > 0);
+    case 1: *dest = ((*src1 & 0x00000080) > 0);
+    case 2: *dest = ((*src1 & 0x00080000) > 0);
+    case 4: *dest = ((*src1 & 0x80000000) > 0);
   }
-  *dest = t0;
 }
 
 static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
+  rtlreg_t res = 0;
   switch (width) {
-    case 1: t1 = *result & 0x000000ff;
-    case 2: t1 = *result & 0x0000ffff;
-    case 4: t1 = *result & 0xffffffff;
+    case 1: res = *result & 0x000000ff;
+    case 2: res = *result & 0x0000ffff;
+    case 4: res = *result & 0xffffffff;
   }
-  if (t1 == 0)
-    cpu.eflags = cpu.eflags | 0x00000040;
+  res = (res == 0);
+  rtl_set_ZF(&res);
 }
 
 static inline void rtl_update_SF(const rtlreg_t* result, int width) {
   // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
-  rtl_msb(&t0, result, width);
-  cpu.eflags = (t0) ? (cpu.eflags | 0x00000080) : (cpu.eflags | 0);
+  rtlreg_t res = 0;
+  rtl_msb(&res, result, width);
+  res = res & 0x1;
+  rtl_set_SF(&res);
+
 }
 
 static inline void rtl_update_ZFSF(const rtlreg_t* result, int width) {
