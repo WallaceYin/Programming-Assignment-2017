@@ -34,7 +34,6 @@ void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {
 
     case CC_E:
     {
-      Log("reach CC_E");
       rtl_get_ZF(&t0);
       if (t0)
         rtl_li(dest, 1);
@@ -88,7 +87,7 @@ void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {
         rtl_li(dest, 0);
     }
 
-    default: panic("should not reach here");
+    default: panic("should not reach here in setcc");
     case CC_P: panic("n86 does not have PF");
   }
   if (invert) {
