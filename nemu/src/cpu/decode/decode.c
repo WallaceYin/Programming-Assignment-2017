@@ -39,6 +39,7 @@ static inline make_DopHelper(SI) {
    op->simm = ???
    */
   op->simm = (int)instr_fetch(eip, op->width);
+  Log("op->simm = %d", op->simm);
   rtl_li(&op->val, op->simm);
 #ifdef DEBUG
   snprintf(op->str, OP_STR_SIZE, "$0x%x", op->simm);
