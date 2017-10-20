@@ -122,10 +122,14 @@ make_EHelper(cltd) {
 
 make_EHelper(cwtl) {
   if (decoding.is_operand_size_16) {
-    TODO();
+    t0 = reg_b(0);
+    rtl_sext(&t1, &t0, 1);
+    reg_w(0) = t1;
   }
   else {
-    TODO();
+    t0 = reg_w(0);
+    rtl_sext(&t1, &t0, 2);
+    reg_l(0) = t1;
   }
 
   print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");
