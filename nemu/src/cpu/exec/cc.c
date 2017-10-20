@@ -83,7 +83,7 @@ void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {
       rtl_get_OF(&t1);
       rtl_xor(&t0, &t0, &t1);
       rtl_get_ZF(&t1);
-      rtl_and(&t2, &t0, & t1);
+      rtl_or(&t2, &t0, & t1);
       if (t2)
         rtl_li(dest, 1);
       else
