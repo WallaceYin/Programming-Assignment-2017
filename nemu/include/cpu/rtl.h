@@ -146,8 +146,16 @@ static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   rtl_msb(&msb, src1, width);
   if (msb)
     switch (width) {
-      case 1: *dest = 0xffffff00 | *src1;
-      case 2: *dest = 0xffff0000 | *src1;
+      case 1:
+      {
+        *dest = 0xffffff00 | *src1;
+        break;
+      }
+      case 2:
+      {
+        *dest = 0xffff0000 | *src1;
+        break;
+      }
     }
   else
     *dest = *src1;
@@ -194,9 +202,9 @@ static inline void rtl_neq0(rtlreg_t* dest, const rtlreg_t* src1) {
 static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- src1[width * 8 - 1]
   switch (width) {
-    case 1: *dest = ((*src1 & 0x00000080) > 0);
-    case 2: *dest = ((*src1 & 0x00080000) > 0);
-    case 4: *dest = ((*src1 & 0x80000000) > 0);
+    case 1: *dest = ((*src1 & 0x00000080) > 0);break;
+    case 2: *dest = ((*src1 & 0x00008000) > 0);break;
+    case 4: *dest = ((*src1 & 0x80000000) > 0);break;
   }
 }
 
@@ -204,9 +212,9 @@ static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
   rtlreg_t res = 0;
   switch (width) {
-    case 1: res = *result & 0x000000ff;
-    case 2: res = *result & 0x0000ffff;
-    case 4: res = *result & 0xffffffff;
+    case 1: res = *result & 0x000000ff;break;
+    case 2: res = *result & 0x0000ffff;break;
+    case 4: res = *result & 0xffffffff;break;
   }
   res = (res == 0);
   rtl_set_ZF(&res);
