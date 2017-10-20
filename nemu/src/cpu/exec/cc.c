@@ -16,7 +16,6 @@ void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {
     case CC_O:
     {
       rtl_get_OF(&t0);
-      rtl_eq0(&t0, &t0);
       if (t0)
         rtl_li(dest, 1);
       else
@@ -48,9 +47,7 @@ void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {
     {
       rtl_get_CF(&t0);
       rtl_get_ZF(&t1);
-      rtl_eq0(&t0, &t0);
-      rtl_eq0(&t1, &t1);
-      rtl_and(&t2, &t0, &t1);
+      rtl_or(&t2, &t0, &t1);
       if (t2)
         rtl_li(dest, 1);
       else
@@ -71,7 +68,7 @@ void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {
     case CC_L:
     {
       rtl_get_SF(&t0);
-      rtl_get_CF(&t1);
+      rtl_get_OF(&t1);
       rtl_xor(&t2, &t0, &t1);
       if (t2)
         rtl_li(dest, 1);
