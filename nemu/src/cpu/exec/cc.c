@@ -34,6 +34,7 @@ void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {
 
     case CC_E:
     {
+      Log("reach CC_E");
       rtl_get_ZF(&t0);
       if (t0)
         rtl_li(dest, 1);
