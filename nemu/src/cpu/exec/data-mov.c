@@ -113,7 +113,7 @@ make_EHelper(cltd) {
     t1 = reg_l(0);
     rtl_msb(&t0, &t1, 4);
     if (t0)
-      reg_l(2) = 0xffff;
+      reg_l(2) = 0xffffffff;
     else
       reg_l(2) = 0;
   }
