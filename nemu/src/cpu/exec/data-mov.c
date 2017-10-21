@@ -8,6 +8,7 @@ make_EHelper(mov) {
 make_EHelper(push) {
   rtl_push(&id_dest->val);
   Log("esp = 0x%x", cpu.esp);
+  Log("0x%x is put into the stack", id_dest->val);
   print_asm_template1(push);
 }
 
