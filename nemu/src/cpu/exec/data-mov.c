@@ -90,6 +90,8 @@ make_EHelper(popa) {
 }
 
 make_EHelper(leave) {
+  t0 = reg_l(5);
+  reg_l(4) = t0;
   if (decoding.is_operand_size_16)
   {
     rtl_pop(&t0);
