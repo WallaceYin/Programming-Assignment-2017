@@ -39,7 +39,9 @@ make_EHelper(sub) {
 }
 
 make_EHelper(cmp) {
-  rtl_sub(&t2, &id_dest->val, &id_src->val);
+  rtl_sext(&t0, &id_src->val, id_dest->width);
+  rtl_sext(&t1, &id_dest->val, id_dest->width);
+  rtl_sub(&t2, &t1, &t0);
   Log("in cmp id_dest = 0x%x and id_src->val = 0x%x", id_dest->val, id_src->val);
   rtl_update_ZFSF(&t2, id_dest->width);
 
