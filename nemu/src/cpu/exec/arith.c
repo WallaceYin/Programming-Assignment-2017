@@ -51,6 +51,9 @@ make_EHelper(cmp) {
   Log("id_dest - id_src = 0x%x",t2);
 
   rtl_sltu(&t0, &id_dest->val, &t2);
+  rtl_xori(&t1, &id_src->val, 0x80000000);
+  rtl_eq0(&t1,&t1);
+  rtl_or(&t0, &t0, &t1);
   rtl_set_CF(&t0);
   Log("CF = 0x%x",t0);
 
@@ -58,9 +61,12 @@ make_EHelper(cmp) {
   rtl_xor(&t1, &id_dest->val, &t2);
   rtl_and(&t0, &t0, &t1);
   rtl_msb(&t0, &t0, id_dest->width);
+  rtl_xori(&t1, &id_src->val, 0x80000000);
+  rtl_eq0(&t1, &t1);
+  rtl_or(&t0, &t0, &t1);
   rtl_set_OF(&t0);
-  Log("OF = 0x%x",t0);
 
+  Log("OF = 0x%x",t0);
   print_asm_template2(cmp);
 }
 
