@@ -51,9 +51,6 @@ make_EHelper(cmp) {
   Log("id_dest - id_src = 0x%x",t2);
 
   rtl_sltu(&t0, &id_dest->val, &t2);
-  rtl_xori(&t1, &id_src->val, 0x80000000);
-  rtl_eq0(&t1,&t1);
-  rtl_or(&t0, &t0, &t1);
   rtl_set_CF(&t0);
   Log("CF = 0x%x",t0);
 
