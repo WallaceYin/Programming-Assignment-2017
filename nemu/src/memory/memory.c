@@ -16,7 +16,6 @@ uint32_t paddr_read(paddr_t addr, int len) {
 }
 
 void paddr_write(paddr_t addr, int len, uint32_t data) {
-  Log("paddr check %08x %d %d\n",addr,len,data);
   memcpy(guest_to_host(addr), &data, len);
 }
 
