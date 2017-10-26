@@ -113,6 +113,7 @@ static inline make_DopHelper(O) {
 make_DHelper(G2E) {
   Log("DHelper G2E");
   decode_op_rm(eip, id_dest, true, id_src, true);
+  Log("id_dest = 0x%x and id_src = 0x%x",id_dest->val, id_src->val);
 }
 
 make_DHelper(mov_G2E) {
