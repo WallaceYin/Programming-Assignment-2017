@@ -18,13 +18,17 @@ static inline void set_width(int width) {
     width = decoding.is_operand_size_16 ? 2 : 4;
   }
   decoding.src.width = decoding.dest.width = decoding.src2.width = width;
+#ifdef DEBUG
   Log("width = %d",width);
+#endif
 }
 
 /* Instruction Decode and EXecute */
 static inline void idex(vaddr_t *eip, opcode_entry *e) {
   /* eip is pointing to the byte next to opcode */
+#ifdef DEBUG
   Log("eip = 0x%8x", *eip);
+#endif
   if (e->decode)
   {
     e->decode(eip);
@@ -219,7 +223,9 @@ static make_EHelper(2byte_esc) {
 make_EHelper(real) {
   uint32_t opcode = instr_fetch(eip, 1);
   decoding.opcode = opcode;
+#ifdef DEBUG
   Log("opcode = 0x%x\t",opcode);
+#endif
   set_width(opcode_table[opcode].width);
   idex(eip, &opcode_table[opcode]);
 }

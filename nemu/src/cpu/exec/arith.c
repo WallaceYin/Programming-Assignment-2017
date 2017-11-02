@@ -15,8 +15,9 @@ make_EHelper(add) {
   rtl_and(&t0, &t0, &t1);
   rtl_msb(&t0, &t0, id_dest->width);
   rtl_set_OF(&t0);
-
+#ifdef DEBUG
   Log("add 0x%x to 0x%x",id_src->val, id_dest->val);
+#endif
   print_asm_template2(add);
 }
 
@@ -35,20 +36,18 @@ make_EHelper(sub) {
   rtl_msb(&t0, &t0, id_dest->width);
   rtl_set_OF(&t0);
 
+#ifdef DEBUG
   Log("sub 0x%x to 0x%x",id_src->val, id_dest->val);
+#endif
   print_asm_template2(sub);
 }
 
 make_EHelper(cmp) {
   rtl_sub(&t2, &id_dest->val, &id_src->val);
-  Log("in cmp id_dest = 0x%x and id_src->val = 0x%x", id_dest->val, id_src->val);
   rtl_update_ZFSF(&t2, id_dest->width);
-
-  Log("id_dest - id_src = 0x%x",t2);
 
   rtl_sltu(&t0, &id_dest->val, &t2);
   rtl_set_CF(&t0);
-  Log("CF = 0x%x",t0);
 
   rtl_xor(&t0, &id_dest->val, &id_src->val);
   rtl_xor(&t1, &id_dest->val, &t2);
@@ -56,7 +55,6 @@ make_EHelper(cmp) {
   rtl_msb(&t0, &t0, id_dest->width);
   rtl_set_OF(&t0);
 
-  Log("OF = 0x%x",t0);
   print_asm_template2(cmp);
 }
 

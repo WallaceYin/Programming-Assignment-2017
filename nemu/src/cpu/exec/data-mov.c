@@ -7,15 +7,12 @@ make_EHelper(mov) {
 
 make_EHelper(push) {
   rtl_push(&id_dest->val);
-  Log("esp = 0x%x", cpu.esp);
-  Log("0x%x is put into the stack", id_dest->val);
   print_asm_template1(push);
 }
 
 make_EHelper(pop) {
   rtl_pop(&t2);
   operand_write(id_dest, &t2);
-  Log("esp = 0x%x", cpu.esp);
   print_asm_template1(pop);
 }
 
