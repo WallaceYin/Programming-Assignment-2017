@@ -130,48 +130,48 @@ bool qemu_cmp_nemu(union gdb_regs regs)
 {
   if (regs.eax != cpu.eax)
   {
-    //Log("Register eax should be 0x%8x but its value is 0x%8x", regs.eax, cpu.eax);
+    Log("Register eax should be 0x%8x but its value is 0x%8x", regs.eax, cpu.eax);
     return 0;
   }
 
   if (regs.ecx != cpu.ecx)
   {
-    //Log("ecx should be 0x%8x but its value is 0x%8x", regs.ecx, cpu.ecx);
+    Log("ecx should be 0x%8x but its value is 0x%8x", regs.ecx, cpu.ecx);
     return 0;
   }
   if (regs.edx != cpu.edx)
   {
-    //Log("edx should be 0x%8x but its value is 0x%8x", regs.edx, cpu.edx);
+    Log("edx should be 0x%8x but its value is 0x%8x", regs.edx, cpu.edx);
     return 0;
   }
   if (regs.ebx != cpu.ebx)
   {
-    //Log("ebx should be 0x%8x but its value is 0x%8x", regs.ebx, cpu.ebx);
+    Log("ebx should be 0x%8x but its value is 0x%8x", regs.ebx, cpu.ebx);
     return 0;
   }
   if (regs.esp != cpu.esp)
   {
-    //Log("esp should be 0x%8x but its value is 0x%8x", regs.esp, cpu.esp);
+    Log("esp should be 0x%8x but its value is 0x%8x", regs.esp, cpu.esp);
     return 0;
   }
   if (regs.ebp != cpu.ebp)
   {
-    //Log("ebp should be 0x%8x but its value is 0x%8x", regs.ebp, cpu.ebp);
+    Log("ebp should be 0x%8x but its value is 0x%8x", regs.ebp, cpu.ebp);
     return 0;
   }
   if (regs.esi != cpu.esi)
   {
-    //Log("esi should be 0x%8x but its value is 0x%8x", regs.esi, cpu.esi);
+    Log("esi should be 0x%8x but its value is 0x%8x", regs.esi, cpu.esi);
     return 0;
   }
   if (regs.edi != cpu.edi)
   {
-    //Log("edi should be 0x%8x but its value is 0x%8x", regs.edi, cpu.edi);
+    Log("edi should be 0x%8x but its value is 0x%8x", regs.edi, cpu.edi);
     return 0;
   }
   if (regs.eip != cpu.eip)
   {
-    //Log("eip should be 0x%8x but its value is 0x%8x", regs.eip, cpu.eip);
+    Log("eip should be 0x%8x but its value is 0x%8x", regs.eip, cpu.eip);
     return 0;
   }
   return 1;
