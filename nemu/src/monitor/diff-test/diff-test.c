@@ -174,6 +174,7 @@ bool qemu_cmp_nemu(union gdb_regs regs)
     Log("eip should be 0x%8x but its value is 0x%8x", regs.eip, cpu.eip);
     return 0;
   }
+  Log("eip == 0x%8x", cpu.eip);
   return 1;
 }
 
