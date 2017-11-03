@@ -40,6 +40,9 @@ make_EHelper(or) {
 make_EHelper(sar) {
   // unnecessary to update CF and OF in NEMU
   rtl_sar(&t2, &id_dest->val, &id_src->val);
+#ifdef DEBUG
+  Log("in sar t2 = 0x%x", id_dest->val);
+#endif
   operand_write(id_dest, &t2);
   rtl_update_ZFSF(&t2, id_dest->width);
   print_asm_template2(sar);
