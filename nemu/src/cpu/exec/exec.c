@@ -98,7 +98,7 @@ opcode_entry opcode_table [512] = {
   /* 0x3c */  IDEXW(I2a, cmp, 1), IDEX(I2a, cmp), EMPTY, EMPTY,
   /* 0x40 */	IDEXW(r, inc, 4), IDEXW(r, inc, 4), IDEXW(r, inc, 4), IDEXW(r, inc, 4),
   /* 0x44 */	IDEXW(r, inc, 4), IDEXW(r, inc, 4), IDEXW(r, inc, 4), IDEXW(r, inc, 4),
-  /* 0x48 */	IDEXW(r, dec, 4), IDEXW(r, inc, 4), IDEXW(r, dec, 4), IDEXW(r, dec, 4),
+  /* 0x48 */	IDEXW(r, dec, 4), IDEXW(r, dec, 4), IDEXW(r, dec, 4), IDEXW(r, dec, 4),
   /* 0x4c */	IDEXW(r, dec, 4), IDEXW(r, dec, 4), IDEXW(r, dec, 4), IDEXW(r, dec, 4),
   /* 0x50 */	IDEXW(r, push, 4), IDEXW(r, push, 4), IDEXW(r, push, 4), IDEXW(r, push, 4),
   /* 0x54 */	IDEXW(r, push, 4), IDEXW(r,push, 4), IDEXW(r,push, 4), IDEXW(r,push, 4),
