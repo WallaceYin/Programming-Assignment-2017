@@ -130,7 +130,8 @@ bool qemu_cmp_nemu(union gdb_regs regs)
 {
   if (regs.eax != cpu.eax)
   {
-    Log("Register eax should be 0x%8x but its value is 0x%8x", regs.eax, cpu.eax);
+    Log("eax should be 0x%8x but its value is 0x%8x", regs.eax, cpu.eax);
+    Log ("eip == 0x%8x", cpu.eip);
     return 0;
   }
 
