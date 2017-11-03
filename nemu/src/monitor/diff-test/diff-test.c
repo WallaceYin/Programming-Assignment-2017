@@ -137,44 +137,51 @@ bool qemu_cmp_nemu(union gdb_regs regs)
   if (regs.ecx != cpu.ecx)
   {
     Log("ecx should be 0x%8x but its value is 0x%8x", regs.ecx, cpu.ecx);
+    Log ("eip == 0x%8x", cpu.eip);
     return 0;
   }
   if (regs.edx != cpu.edx)
   {
     Log("edx should be 0x%8x but its value is 0x%8x", regs.edx, cpu.edx);
+    Log ("eip == 0x%8x", cpu.eip);
     return 0;
   }
   if (regs.ebx != cpu.ebx)
   {
     Log("ebx should be 0x%8x but its value is 0x%8x", regs.ebx, cpu.ebx);
+    Log ("eip == 0x%8x", cpu.eip);
     return 0;
   }
   if (regs.esp != cpu.esp)
   {
     Log("esp should be 0x%8x but its value is 0x%8x", regs.esp, cpu.esp);
+    Log ("eip == 0x%8x", cpu.eip);
     return 0;
   }
   if (regs.ebp != cpu.ebp)
   {
     Log("ebp should be 0x%8x but its value is 0x%8x", regs.ebp, cpu.ebp);
+    Log ("eip == 0x%8x", cpu.eip);
     return 0;
   }
   if (regs.esi != cpu.esi)
   {
     Log("esi should be 0x%8x but its value is 0x%8x", regs.esi, cpu.esi);
+    Log ("eip == 0x%8x", cpu.eip);
     return 0;
   }
   if (regs.edi != cpu.edi)
   {
     Log("edi should be 0x%8x but its value is 0x%8x", regs.edi, cpu.edi);
+    Log ("eip == 0x%8x", cpu.eip);
     return 0;
   }
   if (regs.eip != cpu.eip)
   {
     Log("eip should be 0x%8x but its value is 0x%8x", regs.eip, cpu.eip);
+    Log ("eip == 0x%8x", cpu.eip);
     return 0;
   }
-  Log("eip == 0x%8x", cpu.eip);
   return 1;
 }
 
