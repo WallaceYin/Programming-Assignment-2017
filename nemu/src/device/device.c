@@ -54,14 +54,7 @@ void device_update() {
       case SDL_QUIT: exit(0);
 
                      // If a key was pressed
-      case SDL_KEYDOWN:{
-          if (event.key.repeat == 0) {
-          uint8_t k = event.key.keysym.scancode;
-          bool is_keydown = (event.key.type == SDL_KEYDOWN);
-          send_key(k, is_keydown);
-          break;
-        }
-      }
+      case SDL_KEYDOWN:
       case SDL_KEYUP: {
                         if (event.key.repeat == 0) {
                           uint8_t k = event.key.keysym.scancode;
