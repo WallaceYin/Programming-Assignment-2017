@@ -21,7 +21,6 @@ uint32_t paddr_read(paddr_t addr, int len) {
     Log("is_mmio > -1");
   }
 
-
   return data_read;
 }
 
@@ -29,7 +28,11 @@ void paddr_write(paddr_t addr, int len, uint32_t data) {
   if (is_mmio(addr) == -1)
     memcpy(guest_to_host(addr), &data, len);
   else
+  {
     mmio_write(addr, len, data, is_mmio(addr));
+    Log("is_mmio >-1");
+  }
+
 }
 
 uint32_t vaddr_read(vaddr_t addr, int len) {
