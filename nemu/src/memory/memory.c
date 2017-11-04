@@ -18,7 +18,6 @@ uint32_t paddr_read(paddr_t addr, int len) {
     data_read = pmem_rw(addr, uint32_t) & (~0u >> ((4 - len) << 3));
   else{
     data_read = mmio_read(addr, len,is_mmio(addr));
-    Log("is_mmio > -1");
   }
 
   return data_read;
@@ -30,7 +29,6 @@ void paddr_write(paddr_t addr, int len, uint32_t data) {
   else
   {
     mmio_write(addr, len, data, is_mmio(addr));
-    Log("is_mmio >-1");
   }
 
 }
