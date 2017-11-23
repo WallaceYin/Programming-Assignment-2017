@@ -14,6 +14,7 @@ void extern raise_intr(uint8_t NO, vaddr_t ret_addr) {
    offset = (offset_H << 16) + offset_L;
    decoding.is_jmp = 1;
    decoding.jmp_eip = offset;
+   Log("cpu.IDTR.base = 0x%x", cpu.IDTR.base);
    Log("offset = 0x%x", offset);
 }
 void dev_raise_intr() {
