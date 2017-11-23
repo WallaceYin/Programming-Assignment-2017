@@ -18,7 +18,7 @@ make_EHelper(pop) {
 }
 
 make_EHelper(pusha) {
-  /*if (decoding.is_operand_size_16)
+  if (decoding.is_operand_size_16)
   {
     t0 = reg_w(4);
     for (int i = 0; i < 8; i++)
@@ -26,10 +26,12 @@ make_EHelper(pusha) {
       if (i != 4)
       {
         t1 = reg_w(i);
+        rtl_sext(&t1, &t1, id_dest->width);
         rtl_push(&t1);
       }
       else
       {
+        rtl_sext(&t0, &t0, id_dest->width);
         rtl_push(&t0);
       }
     }
@@ -42,15 +44,16 @@ make_EHelper(pusha) {
       if (i != 4)
       {
         t1 = reg_l(i);
+        rtl_sext(&t1, &t1, id_dest->width);
         rtl_push(&t1);
       }
       else
       {
+        rtl_sext(&t0, &t0, id_dest->width);
         rtl_push(&t0);
       }
     }
-  }*/
-  TODO();
+  }
   print_asm("pusha");
 }
 

@@ -44,9 +44,6 @@ make_EHelper(int) {
   t0 = id_dest->val;
   uint8_t NO;
   NO = t0 & 0xff;
-  Log("NO = 0x%x",NO);
-  Log("decoding.seq_eip = 0x%x",decoding.seq_eip);
-  Log("cpu.eip = 0x%x",cpu.eip);
   raise_intr(NO, cpu.eip);
   print_asm("int %s", id_dest->str);
 
