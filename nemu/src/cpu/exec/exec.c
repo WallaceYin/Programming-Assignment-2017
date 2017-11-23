@@ -104,7 +104,7 @@ opcode_entry opcode_table [512] = {
   /* 0x54 */	IDEXW(r, push, 4), IDEXW(r,push, 4), IDEXW(r,push, 4), IDEXW(r,push, 4),
   /* 0x58 */	IDEX(r, pop), IDEX(r, pop), IDEX(r, pop), IDEX(r, pop),
   /* 0x5c */	IDEX(r, pop), IDEX(r, pop), IDEX(r, pop), IDEX(r, pop),
-  /* 0x60 */	EX(pusha), EX(popa), EMPTY, EMPTY,
+  /* 0x60 */	EMPTY/*EX(pusha)*/, EMPTY/*EX(popa)*/, EMPTY, EMPTY,
   /* 0x64 */	EMPTY, EMPTY, EX(operand_size), EMPTY,
   /* 0x68 */	IDEX(I, push), IDEX(I_E2G, imul3), IDEXW(I, push, 1), IDEX(I_E2G, imul3),
   /* 0x6c */	EMPTY, EMPTY, EMPTY, EMPTY,
