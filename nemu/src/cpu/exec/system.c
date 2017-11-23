@@ -52,17 +52,6 @@ make_EHelper(int) {
 #endif
 }
 
-make_EHelper(int3) {
-  uint8_t NO;
-  NO = 3;
-  raise_intr(NO, cpu.eip);
-  print_asm("int %s", id_dest->str);
-
-#ifdef DIFF_TEST
-  diff_test_skip_nemu();
-#endif
-}
-
 make_EHelper(iret) {
   TODO();
 
