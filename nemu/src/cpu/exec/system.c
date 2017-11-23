@@ -41,7 +41,7 @@ make_EHelper(mov_cr2r) {
 }
 
 make_EHelper(int) {
-  rtl_lm(&t0, &id_dest->val, 1);
+  t0 = id_dest->val;
   uint8_t NO;
   NO = t0 & 0xff;
   Log("NO = 0x%x",NO);
