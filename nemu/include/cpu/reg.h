@@ -56,6 +56,11 @@ typedef struct {
     } eflags;
     rtlreg_t eflags_init;
   };
+  struct {
+    uint16_t limit;
+    uint32_t base;
+  } IDTR;
+  rtlreg_t cs;
 } CPU_state;
 
 extern CPU_state cpu;
