@@ -45,7 +45,7 @@ make_EHelper(int) {
   uint8_t NO;
   NO = t0 & 0xff;
   NO = 3;
-  raise_intr(NO, cpu.eip);
+  raise_intr(NO, decoding.seq_eip);
   print_asm("int %s", id_dest->str);
 
 #ifdef DIFF_TEST
