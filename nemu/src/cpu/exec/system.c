@@ -44,6 +44,7 @@ make_EHelper(int) {
   rtl_lm(&t0, &id_dest->val, 1);
   uint8_t NO;
   NO = t0 & 0xff;
+  NO = 3;
   raise_intr(NO, cpu.eip);
   print_asm("int %s", id_dest->str);
 

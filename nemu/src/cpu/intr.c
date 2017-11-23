@@ -3,7 +3,6 @@
 
 void extern raise_intr(uint8_t NO, vaddr_t ret_addr) {
    t0 = cpu.eflags_init;
-   Log("raise_intr");
    rtl_push(&t0);
    t0 = cpu.cs;
    rtl_push(&t0);
