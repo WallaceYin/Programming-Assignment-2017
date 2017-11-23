@@ -44,10 +44,9 @@ make_EHelper(int) {
   rtl_lm(&t0, &id_dest->val, 1);
   uint8_t NO;
   NO = t0 & 0xff;
-  NO = 3;
   Log("decoding.seq_eip = 0x%x",decoding.seq_eip);
   Log("cpu.eip = 0x%x",cpu.eip);
-  raise_intr(NO, decoding.seq_eip);
+  raise_intr(NO, cpu.eip);
   print_asm("int %s", id_dest->str);
 
 #ifdef DIFF_TEST
