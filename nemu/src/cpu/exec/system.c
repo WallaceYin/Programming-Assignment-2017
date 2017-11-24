@@ -59,14 +59,14 @@ make_EHelper(iret) {
     rtl_pop(&t0);
     t0 = t0 & 0xffff;
     cpu.eip = cpu.eip | t0;
-    Log("eip = 0x%x L", cpu.eip);
   }
   else
   {
     rtl_pop(&t0);
     cpu.eip = t0;
-    Log("eip = 0x%x",cpu.eip);
   }
+  decoding.is_jmp = 1;
+  decoding.jmp_eip = cpu.eip;
   rtl_pop(&t0);
   cpu.cs = t0;
   if (decoding.is_operand_size_16)
