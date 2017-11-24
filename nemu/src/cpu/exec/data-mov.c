@@ -26,12 +26,12 @@ make_EHelper(pusha) {
       if (i != 4)
       {
         t1 = reg_w(i);
-        rtl_sext(&t1, &t1, id_dest->width);
+        rtl_sext(&t1, &t1, 2);
         rtl_push(&t1);
       }
       else
       {
-        rtl_sext(&t0, &t0, id_dest->width);
+        rtl_sext(&t0, &t0, 2);
         rtl_push(&t0);
       }
     }
@@ -44,12 +44,12 @@ make_EHelper(pusha) {
       if (i != 4)
       {
         t1 = reg_l(i);
-        rtl_sext(&t1, &t1, id_dest->width);
+        rtl_sext(&t1, &t1, 4);
         rtl_push(&t1);
       }
       else
       {
-        rtl_sext(&t0, &t0, id_dest->width);
+        rtl_sext(&t0, &t0, 4);
         rtl_push(&t0);
       }
     }
