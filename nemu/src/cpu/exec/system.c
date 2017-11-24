@@ -53,8 +53,32 @@ make_EHelper(int) {
 }
 
 make_EHelper(iret) {
-  TODO();
-
+  //TODO();
+  if (decoding.is_operand_size_16)
+  {
+    rtl_pop(&t0);
+    t0 = t0 & 0xffff;
+    cpu.eip = cpu.eip | t0;
+  }
+  else
+  {
+    rtl_pop(&t0);
+    cpu.eip = t0;
+  }
+  rtl_pop(&t0);
+  cpu.cs = t0;
+  if (decoding.is_operand_size_16)
+  {
+    rtl_pop(&t0);
+    t0 = t0 & 0xffff;
+    cpu.eflags_init = cpu.eflags_init | t0;
+  }
+  else
+  {
+    rtl_pop(&t0);
+    cpu.eflags_init = t0;
+  }
+  
   print_asm("iret");
 }
 
