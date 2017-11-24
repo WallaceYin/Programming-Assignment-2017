@@ -59,11 +59,13 @@ make_EHelper(iret) {
     rtl_pop(&t0);
     t0 = t0 & 0xffff;
     cpu.eip = cpu.eip | t0;
+    Log("eip = 0x%x L", cpu.eip);
   }
   else
   {
     rtl_pop(&t0);
     cpu.eip = t0;
+    Log("eip = 0x%x",cpu.eip);
   }
   rtl_pop(&t0);
   cpu.cs = t0;
@@ -78,7 +80,7 @@ make_EHelper(iret) {
     rtl_pop(&t0);
     cpu.eflags_init = t0;
   }
-  
+
   print_asm("iret");
 }
 
