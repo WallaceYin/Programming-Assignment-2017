@@ -60,7 +60,7 @@ make_EHelper(pusha) {
 make_EHelper(popa) {
   if (decoding.is_operand_size_16)
   {
-    for (int i = 0; i < 8; i++)
+    for (int i = 7; i >= 0; i--)
     {
       if (i != 4)
       {
@@ -75,7 +75,7 @@ make_EHelper(popa) {
   }
   else
   {
-    for (int i = 0; i < 8; i++)
+    for (int i = 7; i >= 0; i--)
     {
       if (i != 4)
       {
