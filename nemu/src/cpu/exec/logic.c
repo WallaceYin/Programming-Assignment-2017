@@ -80,3 +80,7 @@ make_EHelper(not) {
   rtl_update_ZFSF(&t2, id_dest->width);
   print_asm_template1(not);
 }
+
+make_EHelper(rol) {
+  Log("Rol !!!");
+}
