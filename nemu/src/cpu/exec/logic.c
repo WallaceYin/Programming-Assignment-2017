@@ -84,5 +84,12 @@ make_EHelper(not) {
 make_EHelper(rol) {
   rtl_mv(&t0, &id_src->val);
   rtl_neq0(&t1, &t0);
-  Log("id_dest->width = %x", id_dest->width);
+  while (t1)
+  {
+    rtl_msb(&t2, &id_dest->val, 1);
+    id_dest->val = (id_dest->val * 2 + t2) & 0xff;
+    rtl_li(&t0, t0 - 1);
+    rtl_neq0(&t1, &t0);
+  }
+  operand_write(id_dest, &id_dest->val);
 }
