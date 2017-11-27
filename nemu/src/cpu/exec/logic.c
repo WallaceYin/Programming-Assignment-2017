@@ -82,7 +82,7 @@ make_EHelper(not) {
 }
 
 make_EHelper(rol) {
-  TODO();
-  rtl_mv(&t0, &id_dest->val);
+  rtl_mv(&t0, &id_src->val);
   rtl_neq0(&t1, &t0);
+  Log("id_dest->width = %x", id_dest->width);
 }
