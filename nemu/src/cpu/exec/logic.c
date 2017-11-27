@@ -82,5 +82,7 @@ make_EHelper(not) {
 }
 
 make_EHelper(rol) {
-  Log("Rol !!!");
+  TODO();
+  rtl_mv(&t0, &id_dest->val);
+  rtl_neq0(&t1, &t0);
 }
