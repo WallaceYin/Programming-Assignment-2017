@@ -64,7 +64,7 @@ make_EHelper(iret) {
     rtl_pop(&t0);
   }
   decoding.is_jmp = 1;
-  decoding.jmp_eip = cpu.eip;
+  decoding.jmp_eip = t0;
   rtl_pop(&t0);
   cpu.cs = t0;
   if (decoding.is_operand_size_16)
