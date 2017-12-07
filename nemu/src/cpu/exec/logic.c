@@ -82,6 +82,7 @@ make_EHelper(not) {
 }
 
 make_EHelper(rol) {
+  Log("rol !!");
   rtl_mv(&t0, &id_src->val);
   rtl_neq0(&t1, &t0);
   while (t1)
@@ -92,4 +93,16 @@ make_EHelper(rol) {
     rtl_neq0(&t1, &t0);
   }
   operand_write(id_dest, &id_dest->val);
+}
+
+make_EHelper(ror) {
+  Log("ror !!");
+}
+
+make_EHelper(rcl) {
+  Log("rcl !!");
+}
+
+make_EHelper(rcr) {
+  Log("rcr !!");
 }

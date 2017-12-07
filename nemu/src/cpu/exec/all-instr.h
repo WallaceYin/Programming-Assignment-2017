@@ -54,6 +54,9 @@ make_EHelper(shr);
 make_EHelper(setcc);
 make_EHelper(not);
 make_EHelper(rol);
+make_EHelper(ror);
+make_EHelper(rcl);
+make_EHelper(rcr);
 
 //system.c
 make_EHelper(in);
