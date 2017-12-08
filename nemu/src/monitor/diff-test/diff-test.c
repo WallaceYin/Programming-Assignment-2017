@@ -126,66 +126,6 @@ void init_qemu_reg() {
   assert(ok == 1);
 }
 
-bool qemu_cmp_nemu(union gdb_regs regs)
-{
-  if (regs.eax != cpu.eax)
-  {
-    Log("eax should be 0x%8x but its value is 0x%8x", regs.eax, cpu.eax);
-    Log ("eip == 0x%8x", cpu.eip);
-    return 0;
-  }
-
-  if (regs.ecx != cpu.ecx)
-  {
-    Log("ecx should be 0x%8x but its value is 0x%8x", regs.ecx, cpu.ecx);
-    Log ("eip == 0x%8x", cpu.eip);
-    return 0;
-  }
-  if (regs.edx != cpu.edx)
-  {
-    Log("edx should be 0x%8x but its value is 0x%8x", regs.edx, cpu.edx);
-    Log ("eip == 0x%8x", cpu.eip);
-    return 0;
-  }
-  if (regs.ebx != cpu.ebx)
-  {
-    Log("ebx should be 0x%8x but its value is 0x%8x", regs.ebx, cpu.ebx);
-    Log ("eip == 0x%8x", cpu.eip);
-    return 0;
-  }
-  if (regs.esp != cpu.esp)
-  {
-    Log("esp should be 0x%8x but its value is 0x%8x", regs.esp, cpu.esp);
-    Log ("eip == 0x%8x", cpu.eip);
-    return 0;
-  }
-  if (regs.ebp != cpu.ebp)
-  {
-    Log("ebp should be 0x%8x but its value is 0x%8x", regs.ebp, cpu.ebp);
-    Log ("eip == 0x%8x", cpu.eip);
-    return 0;
-  }
-  if (regs.esi != cpu.esi)
-  {
-    Log("esi should be 0x%8x but its value is 0x%8x", regs.esi, cpu.esi);
-    Log ("eip == 0x%8x", cpu.eip);
-    return 0;
-  }
-  if (regs.edi != cpu.edi)
-  {
-    Log("edi should be 0x%8x but its value is 0x%8x", regs.edi, cpu.edi);
-    Log ("eip == 0x%8x", cpu.eip);
-    return 0;
-  }
-  if (regs.eip != cpu.eip)
-  {
-    Log("eip should be 0x%8x but its value is 0x%8x", regs.eip, cpu.eip);
-    Log ("eip == 0x%8x", cpu.eip);
-    return 0;
-  }
-  return 1;
-}
-
 void difftest_step(uint32_t eip) {
   union gdb_regs r;
   bool diff = false;
@@ -209,10 +149,103 @@ void difftest_step(uint32_t eip) {
 
   // TODO: Check the registers state with QEMU.
   // Set `diff` as `true` if they are not the same.
-  diff = !qemu_cmp_nemu(r);
-
-
+  //TODO();
+  union gdb_regs r_in_nemu;
+  regcpy_from_nemu(r_in_nemu);
+  if(r_in_nemu.eax!=r.eax)
+  {
+      diff=true;
+      printf("eax not equal!\n");
+      printf("Right: 0x%x, Wrong: 0x%x\n", r.eax, r_in_nemu.eax);
+  }
+  if(r_in_nemu.ebx!=r.ebx)
+  {
+      diff=true;
+      printf("ebx not equal!\n");
+      printf("Right: 0x%x, Wrong: 0x%x\n", r.ebx, r_in_nemu.ebx);
+  }
+  if(r_in_nemu.ecx!=r.ecx)
+  {
+      diff=true;
+      printf("ecx not equal!\n");      
+      printf("Right: 0x%x, Wrong: 0x%x\n", r.ecx, r_in_nemu.ecx);
+  }
+  if(r_in_nemu.edx!=r.edx)
+  {
+      diff=true;
+      printf("edx not equal!\n");
+      printf("Right: 0x%x, Wrong: 0x%x\n", r.edx, r_in_nemu.edx);
+  }
+  if(r_in_nemu.ebp!=r.ebp)
+  {
+      diff=true;
+      printf("ebp not equal!\n");
+      printf("Right: 0x%x, Wrong: 0x%x\n", r.ebp, r_in_nemu.ebp);
+  }
+  if(r_in_nemu.esi!=r.esi)
+  {
+      diff=true;
+      printf("esi not equal!\n");
+      printf("Right: 0x%x, Wrong: 0x%x\n", r.esi, r_in_nemu.esi);
+  }
+  if(r_in_nemu.esp!=r.esp)
+  {
+      diff=true;
+      printf("esp not equal!\n");
+      printf("Right: 0x%x, Wrong: 0x%x\n", r.esp, r_in_nemu.esp);
+  }
+  if(r_in_nemu.eip!=r.eip)
+  {
+      diff=true;
+      printf("eip not equal!\n");
+      printf("Right: 0x%x, Wrong: 0x%x\n", r.eip, r_in_nemu.eip);
+  }
+/*  struct{
+      uint32_t flag;
+      uint8_t CF:1;
+      uint8_t ZF:1;
+      uint8_t SF:1;
+      uint8_t IF:1;
+      uint8_t OF:1;
+  }tmp;
+  tmp.CF=r.eflags & 1;
+  tmp.ZF=r.eflags & 64;
+  tmp.SF=r.eflags & 128;
+  tmp.IF=r.eflags & 512;
+  tmp.OF=r.eflags & 2048;
+  if(cpu.eflags.CF!=tmp.CF)
+  {
+      diff=true;
+      printf("eflags.CF not equal!\n");
+      printf("Right: 0x%x, Wrong: 0x%x\n", tmp.CF, cpu.eflags.CF);
+  }
+  if(cpu.eflags.ZF!=tmp.ZF)
+  {
+      diff=true;
+      printf("eflags.ZF not equal!\n");
+      printf("Right: 0x%x, Wrong: 0x%x\n", tmp.ZF, cpu.eflags.ZF);
+  }
+  if(cpu.eflags.SF!=tmp.SF)
+  {
+      diff=true;
+      printf("eflags.SF not equal!\n");
+      printf("Right: 0x%x, Wrong: 0x%x\n", tmp.SF, cpu.eflags.SF);
+  }
+  if(cpu.eflags.IF!=tmp.IF)
+  {
+      diff=true;
+      printf("eflags.IF not equal!\n");
+      printf("Right: 0x%x, Wrong: 0x%x\n", tmp.IF, cpu.eflags.IF);
+  }
+  if(cpu.eflags.OF!=tmp.OF)
+  {
+      diff=true;
+      printf("eflags.OF not equal!\n");
+      printf("Right: 0x%x, Wrong: 0x%x\n", tmp.OF, cpu.eflags.OF);
+  }
+*/
   if (diff) {
+    printf("eip=0x%x", r_in_nemu.eip);
     nemu_state = NEMU_END;
   }
 }

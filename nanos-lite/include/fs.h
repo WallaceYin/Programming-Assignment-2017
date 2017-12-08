@@ -4,5 +4,11 @@
 #include "common.h"
 
 enum {SEEK_SET, SEEK_CUR, SEEK_END};
+int fs_open(const char *, int, int);
+ssize_t fs_read(int, const void *, size_t);
+off_t fs_lseek(int, off_t, int);
+ssize_t fs_write(int, const void *, size_t);
+int fs_close(int);
+size_t fs_filesz(int);
 
 #endif
