@@ -18,13 +18,21 @@ static inline void set_width(int width) {
     width = decoding.is_operand_size_16 ? 2 : 4;
   }
   decoding.src.width = decoding.dest.width = decoding.src2.width = width;
+#ifdef DEBUG
+  Log("width = %d",width);
+#endif
 }
 
 /* Instruction Decode and EXecute */
 static inline void idex(vaddr_t *eip, opcode_entry *e) {
   /* eip is pointing to the byte next to opcode */
+#ifdef DEBUG
+  Log("eip = 0x%8x", *eip);
+#endif
   if (e->decode)
+  {
     e->decode(eip);
+  }
   e->execute(eip);
 }
 
@@ -39,7 +47,7 @@ static make_EHelper(name) { \
   idex(eip, &concat(opcode_table_, name)[decoding.ext_opcode]); \
 }
 
-  /* 0x80, 0x81, 0x83 */
+/* 0x80, 0x81, 0x83 */
 make_group(gp1,
     EX(add), EX(or), EX(adc), EX(sbb),
     EX(and), EX(sub), EX(xor), EX(cmp))
@@ -56,7 +64,7 @@ make_group(gp3,
 
   /* 0xfe */
 make_group(gp4,
-    EMPTY, EX(dec), EMPTY, EMPTY,
+    EX(inc), EX(dec), EMPTY, EMPTY,
     EMPTY, EMPTY, EMPTY, EMPTY)
 
   /* 0xff */
@@ -80,20 +88,20 @@ opcode_entry opcode_table [512] = {
   /* 0x14 */	IDEXW(I2a, adc, 1), IDEX(I2a, adc), EMPTY, EMPTY,
   /* 0x18 */	IDEXW(G2E, sbb, 1), IDEX(G2E, sbb), IDEXW(E2G, sbb, 1), IDEX(E2G, sbb),
   /* 0x1c */	IDEXW(I2a, sbb, 1), IDEX(I2a, sbb), EMPTY, EMPTY,
-  /* 0x20 */    IDEXW(G2E, and, 1), IDEX(G2E, and), IDEXW(E2G, and, 1), IDEX(E2G, and),
-  /* 0x24 */	IDEXW(I2a, and, 1), IDEX(I2a, and), EMPTY, EMPTY,
+  /* 0x20 */	IDEXW(G2E, and, 1), IDEX(G2E, and), IDEXW(E2G, and, 1), IDEX(E2G, and),
+  /* 0x24 */	IDEXW(I2a, and ,1), IDEX(I2a, and), EMPTY, EMPTY,
   /* 0x28 */	IDEXW(G2E, sub, 1), IDEX(G2E, sub), IDEXW(E2G, sub, 1), IDEX(E2G, sub),
   /* 0x2c */	IDEXW(I2a, sub, 1), IDEX(I2a, sub), EMPTY, EMPTY,
-  /* 0x30 */    IDEXW(G2E, xor, 1), IDEX(G2E, xor), IDEXW(E2G, xor, 1), IDEX(E2G, xor),
+  /* 0x30 */	IDEXW(G2E, xor, 1), IDEX(G2E, xor), IDEXW(E2G, xor, 1), IDEX(E2G, xor),
   /* 0x34 */	IDEXW(I2a, xor, 1), IDEX(I2a, xor), EMPTY, EMPTY,
   /* 0x38 */	IDEXW(G2E, cmp, 1), IDEX(G2E, cmp), IDEXW(E2G, cmp, 1), IDEX(E2G, cmp),
-  /* 0x3c */	IDEXW(I2a, cmp, 1), IDEX(I2a, cmp), EMPTY, EMPTY,
-  /* 0x40 */	IDEX(r, inc), IDEX(r, inc), IDEX(r, inc), IDEX(r, inc),
-  /* 0x44 */	IDEX(r, inc), IDEX(r, inc), IDEX(r, inc), IDEX(r, inc),
-  /* 0x48 */	IDEX(r, dec), IDEX(r, dec), IDEX(r, dec), IDEX(r, dec),
-  /* 0x4c */	IDEX(r, dec), IDEX(r, dec), IDEX(r, dec), IDEX(r, dec),
-  /* 0x50 */	IDEX(r, push),IDEX(r, push), IDEX(r, push), IDEX(r, push),
-  /* 0x54 */	IDEX(r, push), IDEX(r, push), IDEX(r, push), IDEX(r, push),
+  /* 0x3c */  IDEXW(I2a, cmp, 1), IDEX(I2a, cmp), EMPTY, EMPTY,
+  /* 0x40 */	IDEXW(r, inc, 4), IDEXW(r, inc, 4), IDEXW(r, inc, 4), IDEXW(r, inc, 4),
+  /* 0x44 */	IDEXW(r, inc, 4), IDEXW(r, inc, 4), IDEXW(r, inc, 4), IDEXW(r, inc, 4),
+  /* 0x48 */	IDEXW(r, dec, 4), IDEXW(r, dec, 4), IDEXW(r, dec, 4), IDEXW(r, dec, 4),
+  /* 0x4c */	IDEXW(r, dec, 4), IDEXW(r, dec, 4), IDEXW(r, dec, 4), IDEXW(r, dec, 4),
+  /* 0x50 */	IDEXW(r, push, 4), IDEXW(r, push, 4), IDEXW(r, push, 4), IDEXW(r, push, 4),
+  /* 0x54 */	IDEXW(r, push, 4), IDEXW(r,push, 4), IDEXW(r,push, 4), IDEXW(r,push, 4),
   /* 0x58 */	IDEX(r, pop), IDEX(r, pop), IDEX(r, pop), IDEX(r, pop),
   /* 0x5c */	IDEX(r, pop), IDEX(r, pop), IDEX(r, pop), IDEX(r, pop),
   /* 0x60 */	EX(pusha), EX(popa), EMPTY, EMPTY,
@@ -107,10 +115,10 @@ opcode_entry opcode_table [512] = {
   /* 0x80 */	IDEXW(I2E, gp1, 1), IDEX(I2E, gp1), EMPTY, IDEX(SI2E, gp1),
   /* 0x84 */	IDEXW(G2E, test, 1), IDEX(G2E, test), EMPTY, EMPTY,
   /* 0x88 */	IDEXW(mov_G2E, mov, 1), IDEX(mov_G2E, mov), IDEXW(mov_E2G, mov, 1), IDEX(mov_E2G, mov),
-  /* 0x8c */	EMPTY, IDEX(lea_M2G, lea), EMPTY, EMPTY,
-  /* 0x90 */	IDEX(r, xchg), EMPTY, EMPTY, EMPTY,
+  /* 0x8c */	EMPTY, IDEX(lea_M2G, lea), EMPTY, IDEX(E, pop),
+  /* 0x90 */	EX(nop), EMPTY, EMPTY, EMPTY,
   /* 0x94 */	EMPTY, EMPTY, EMPTY, EMPTY,
-  /* 0x98 */	EX(cwtl), EX(cltd), IDEX(J, call), EMPTY,
+  /* 0x98 */	EX(cwtl), EX(cltd), IDEX(J,call), EMPTY,
   /* 0x9c */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xa0 */	IDEXW(O2a, mov, 1), IDEX(O2a, mov), IDEXW(a2O, mov, 1), IDEX(a2O, mov),
   /* 0xa4 */	EMPTY, EMPTY, EMPTY, EMPTY,
@@ -120,17 +128,17 @@ opcode_entry opcode_table [512] = {
   /* 0xb4 */	IDEXW(mov_I2r, mov, 1), IDEXW(mov_I2r, mov, 1), IDEXW(mov_I2r, mov, 1), IDEXW(mov_I2r, mov, 1),
   /* 0xb8 */	IDEX(mov_I2r, mov), IDEX(mov_I2r, mov), IDEX(mov_I2r, mov), IDEX(mov_I2r, mov),
   /* 0xbc */	IDEX(mov_I2r, mov), IDEX(mov_I2r, mov), IDEX(mov_I2r, mov), IDEX(mov_I2r, mov),
-  /* 0xc0 */	IDEXW(gp2_Ib2E, gp2, 1), IDEX(gp2_Ib2E, gp2), EX(ret), EX(ret),
+  /* 0xc0 */	IDEXW(gp2_Ib2E, gp2, 1), IDEX(gp2_Ib2E, gp2), EMPTY, EX(ret),
   /* 0xc4 */	EMPTY, EMPTY, IDEXW(mov_I2E, mov, 1), IDEX(mov_I2E, mov),
   /* 0xc8 */	EMPTY, EX(leave), EX(ret), EX(ret),
-  /* 0xcc */	EX(int), IDEXW(I, int, 1), EMPTY, EX(iret),
+  /* 0xcc */	EX(int), IDEXW(I, int, 1) , EMPTY, EX(iret),
   /* 0xd0 */	IDEXW(gp2_1_E, gp2, 1), IDEX(gp2_1_E, gp2), IDEXW(gp2_cl2E, gp2, 1), IDEX(gp2_cl2E, gp2),
   /* 0xd4 */	EMPTY, EMPTY, EX(nemu_trap), EMPTY,
   /* 0xd8 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xdc */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xe0 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xe4 */	IDEXW(in_I2a, in, 1), IDEX(in_I2a, in), IDEXW(out_a2I, out, 1), IDEX(out_a2I, out),
-  /* 0xe8 */	IDEX(J, call), IDEX(J, jmp), IDEX(J, jmp_rm), IDEXW(J, jmp, 1),
+  /* 0xe8 */	IDEX(J,call), IDEX(J, jmp), IDEX(J,jmp_rm), IDEXW(J, jmp, 1),
   /* 0xec */	IDEXW(in_dx2a, in, 1), IDEX(in_dx2a, in), IDEXW(out_a2dx, out, 1), IDEX(out_a2dx, out),
   /* 0xf0 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xf4 */	EMPTY, EMPTY, IDEXW(E, gp3, 1), IDEX(E, gp3),
@@ -184,7 +192,7 @@ opcode_entry opcode_table [512] = {
   /* 0xa8 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xac */	EMPTY, EMPTY, EMPTY, IDEX(E2G, imul2),
   /* 0xb0 */	EMPTY, EMPTY, EMPTY, EMPTY,
-  /* 0xb4 */	EMPTY, EMPTY, IDEXW(mov_E2G, movzx, 1), IDEXW(mov_E2G, movzx, 2),
+  /* 0xb4 */	EMPTY, EMPTY, IDEXW(mov_E2G, movzx,1), IDEXW(mov_E2G, movzx, 2),
   /* 0xb8 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xbc */	EMPTY, EMPTY, IDEXW(mov_E2G, movsx, 1), IDEXW(mov_E2G, movsx, 2),
   /* 0xc0 */	EMPTY, EMPTY, EMPTY, EMPTY,
@@ -215,6 +223,9 @@ static make_EHelper(2byte_esc) {
 make_EHelper(real) {
   uint32_t opcode = instr_fetch(eip, 1);
   decoding.opcode = opcode;
+#ifdef DEBUG
+  Log("opcode = 0x%x\t",opcode);
+#endif
   set_width(opcode_table[opcode].width);
   idex(eip, &opcode_table[opcode]);
 }
@@ -224,7 +235,6 @@ static inline void update_eip(void) {
 }
 
 void exec_wrapper(bool print_flag) {
-    //print_flag = true;
 #ifdef DEBUG
   decoding.p = decoding.asm_buf;
   decoding.p += sprintf(decoding.p, "%8x:   ", cpu.eip);
@@ -234,16 +244,8 @@ void exec_wrapper(bool print_flag) {
   exec_real(&decoding.seq_eip);
 
 #ifdef DEBUG
-  uint32_t instr_len = decoding.seq_eip - cpu.eip;
-  //printf("instr_len: %d\n", instr_len);
-
-  //if (instr_len >= 20) instr_len = 20;
-  /*printf("%08x %08x %08x\n", cpu.eip, decoding.seq_eip, decoding.jmp_eip);*/
-  /*printf("%p\n", decoding.p);*/
-  //printf("%d\n", instr_len);
+  int instr_len = decoding.seq_eip - cpu.eip;
   sprintf(decoding.p, "%*.s", 50 - (12 + 3 * instr_len), "");
-
-  /*printf("%08x %08x %08x\n", cpu.eip, decoding.seq_eip, decoding.jmp_eip);*/
   strcat(decoding.asm_buf, decoding.assembly);
   Log_write("%s\n", decoding.asm_buf);
   if (print_flag) {
