@@ -40,7 +40,6 @@ make_EHelper(or) {
 make_EHelper(sar) {
   
 	// unnecessary to update CF and OF in NEMU
-  Log("sar!!");
 	rtl_sext(&id_dest->val, &id_dest->val, id_dest->width);
   rtl_sar(&t2, &id_dest->val, &id_src->val);
 #ifdef DEBUG
