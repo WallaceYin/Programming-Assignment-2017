@@ -25,7 +25,7 @@ make_EHelper(jmp);
 make_EHelper(leave);
 make_EHelper(add);
 make_EHelper(inc);
-make_EHelper(xchg);
+make_EHelper(nop);
 make_EHelper(cltd);
 make_EHelper(idiv);
 make_EHelper(shr);
