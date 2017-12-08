@@ -108,6 +108,7 @@ make_EHelper(leave) {
 }
 
 make_EHelper(cltd) {
+	Log("cltd!!");
   if (decoding.is_operand_size_16) {
     t1 = reg_w(0);
     rtl_msb(&t0, &t1, 2);
@@ -128,6 +129,7 @@ make_EHelper(cltd) {
 }
 
 make_EHelper(cwtl) {
+	Log("cwtl!!");
   if (decoding.is_operand_size_16) {
     t0 = reg_b(0);
     rtl_sext(&t1, &t0, 1);

@@ -19,7 +19,7 @@ static inline void set_width(int width) {
   }
   decoding.src.width = decoding.dest.width = decoding.src2.width = width;
 #ifdef DEBUG
-  Log("width = %d",width);
+  //Log("width = %d",width);
 #endif
 }
 
@@ -27,7 +27,7 @@ static inline void set_width(int width) {
 static inline void idex(vaddr_t *eip, opcode_entry *e) {
   /* eip is pointing to the byte next to opcode */
 #ifdef DEBUG
-  Log("eip = 0x%8x", *eip);
+  //Log("eip = 0x%8x", *eip);
 #endif
   if (e->decode)
   {
