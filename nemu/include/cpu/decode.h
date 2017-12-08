@@ -5,7 +5,7 @@
 
 #include "rtl.h"
 
-enum { OP_TYPE_REG, OP_TYPE_MEM, OP_TYPE_IMM };
+enum { OP_TYPE_REG, OP_TYPE_MEM, OP_TYPE_IMM};
 
 #define OP_STR_SIZE 40
 
@@ -24,12 +24,12 @@ typedef struct {
 
 typedef struct {
   uint32_t opcode;
-  vaddr_t seq_eip;  // sequential eip 下条指令的地址
+  vaddr_t seq_eip;  // sequential eip
   bool is_operand_size_16;
   uint8_t ext_opcode;
-  bool is_jmp;//是否需要跳转
-  vaddr_t jmp_eip;//跳转地址
-  Operand src, dest, src2;//操作数
+  bool is_jmp;
+  vaddr_t jmp_eip;
+  Operand src, dest, src2;
 #ifdef DEBUG
   char assembly[80];
   char asm_buf[128];
@@ -73,7 +73,15 @@ extern DecodeInfo decoding;
 
 #define make_DHelper(name) void concat(decode_, name) (vaddr_t *eip)
 typedef void (*DHelper) (vaddr_t *);
-
+/*
+A direct address
+I immediate data
+E general register or memory address
+R general register
+G general register
+SI signed immediate
+J indirect address
+*/
 make_DHelper(I2E);
 make_DHelper(I2a);
 make_DHelper(I2r);
