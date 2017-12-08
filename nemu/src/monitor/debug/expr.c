@@ -1,5 +1,5 @@
 #include "nemu.h"
-
+#include <stdlib.h>
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
  */
@@ -7,15 +7,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ = 2,
-  TK_PLUS = 43, TK_MINUS = 45,
-  TK_TIMES = 42, TK_DIV = 47,
-  TK_lpar = 28, TK_rpar = 29,
-  TK_HEX = 127, TK_DEX = 129,
-  TK_REG = 1,
-  TK_NEQ = 5, TK_AND = 13,
-  TK_OR = 31, TK_NOT= 4,
-  TK_REF = 10
+  TK_NOTYPE = 256, TK_EQ, TK_NOEQ, TK_NUM_DEC, TK_NUM_HEX, TK_REG, TK_DEREF,
   /* TODO: Add more token types */
 
 };
@@ -28,30 +20,24 @@ static struct rule {
   /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
    */
-  {"\\)", TK_rpar},          // right parenthesis
-  {"\\(", TK_lpar},          // left parenthesis
-  {"/", TK_DIV},         // divide
-  {"\\*", TK_TIMES},         // times
-  {"\\*", TK_REF},	//reference
-  {"-", TK_MINUS},         // minus
-  {" +", TK_NOTYPE},    // spaces
-  {"\\+", TK_PLUS},         // plus
-  {"==", TK_EQ},         // equal
-  {"[1-9]+[0-9]*",TK_DEX},    //dexnumber
-  {"0x[0123456789abcdef]+",TK_HEX},    //hexnumber
-  {"\\$e[abcd]x",TK_REG},	//register(eax, ebx, ecx,edx)
-  {"\\$e[sb]p",TK_REG}, 	//register(esp, ebp)
-  {"\\$e[sd]i",TK_REG},		//register(edi, esi)
-  {"\\$eip",TK_REG},		//register(eip)
-  {"!=",TK_NEQ},	//not equal
-  {"&&",TK_AND},	//and
-  {"||",TK_OR},		//or
-  {"!",TK_NOT}		//not
+
+  {"\\ +", TK_NOTYPE},    // spaces
+  {"\\+", '+'},         // plus
+  {"==", TK_EQ},        // equal
+  {"!=", TK_NOEQ}, 	//not equal
+  {"-", '-'}, 		//minus
+  {"\\*", TK_DEREF},		//product
+  {"/", '/'},		//division
+  {"0x[0-9a-fA-F]+", TK_NUM_HEX},//numbers, hex
+  {"[0-9]+", TK_NUM_DEC},//numbers, decimal
+  {"\\$[a-z]{2,3}", TK_REG}, //registers
+  {"\\(", '('},	//parenthesis on the left
+  {"\\)", ')'},	//parenthesis on the right
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
 
-static regex_t re[NR_REGEX];
+static regex_t re[NR_REGEX];//Compiled regex
 
 /* Rules are used for many times.
  * Therefore we compile them only once before any usage.
@@ -78,201 +64,6 @@ typedef struct token {
 Token tokens[32];
 int nr_token;
 
-bool higherLevel(int TK_type_1, int TK_type_2)
-{
-	if (TK_type_1 == TK_TIMES || TK_type_1 == TK_DIV)
-	{
-		if (TK_type_2 == TK_PLUS || TK_type_2 == TK_MINUS)
-			return 1;
-		if (TK_type_2 == TK_TIMES || TK_type_2 == TK_DIV)
-			return 1;
-		if (TK_type_2 == TK_EQ || TK_type_2 == TK_NEQ)
-			return 1;
-		if (TK_type_2 == TK_AND || TK_type_2 == TK_OR)
-			return 1;
-
-	}
-	if (TK_type_1 == TK_PLUS || TK_type_1 == TK_MINUS)
-	{
-		if (TK_type_2 == TK_PLUS || TK_type_2 == TK_MINUS)
-			return 1;
-		if (TK_type_2 == TK_EQ || TK_type_2 == TK_NEQ)
-			return 1;
-		if (TK_type_2 == TK_AND || TK_type_2 == TK_OR)
-			return 1;
-	}
-	if (TK_type_1 == TK_EQ || TK_type_1 == TK_NEQ)
-	{
-		if (TK_type_2 == TK_EQ || TK_type_2 == TK_NEQ)
-			return 1;
-		if (TK_type_2 == TK_AND || TK_type_2 == TK_OR)
-			return 1;
-	}
-	if (TK_type_1 == TK_AND || TK_type_1 == TK_OR)
-	{
-		if (TK_type_2 == TK_AND || TK_type_2 == TK_OR)
-			return 1;
-	}
-	if (TK_type_1 == 0)
-	{
-		if (TK_type_2 == TK_PLUS || TK_type_2 == TK_MINUS)
-			return 1;
-		if (TK_type_2 == TK_TIMES || TK_type_2 == TK_DIV)
-			return 1;
-		if (TK_type_2 == TK_EQ || TK_type_2 == TK_NEQ)
-			return 1;
-		if (TK_type_2 == TK_AND || TK_type_2 == TK_OR)
-			return 1;
-	}
-	return 0;
-}
-
-bool isOperator(int p)
-{
-	switch (tokens[p].type)
-	{
-		case (TK_PLUS):
-			return 1;
-		case (TK_MINUS):
-			return 1;
-		case (TK_TIMES):
-		{
-			if (p > 0 && !isOperator(p-1))
-				return 1;
-			else
-				return 0;
-		}
-		case (TK_DIV):
-			return 1;
-		case (TK_EQ):
-			return 1;
-		case (TK_NEQ):
-			return 1;
-		case (TK_AND):
-			return 1;
-		case (TK_OR):
-			return 1;
-		default:
-			return 0;
-	}
-	return 0;
-}
-uint32_t regToVal(int p)
-{
-	if (strcmp(tokens[p].str,"$eax") == 0)
-		return cpu.eax;
-	if (strcmp(tokens[p].str,"$ecx") == 0)
-		return cpu.ecx;
-	if (strcmp(tokens[p].str,"$ebx") == 0)
-		return cpu.ebx;
-	if (strcmp(tokens[p].str,"$edx") == 0)
-		return cpu.edx;
-	if (strcmp(tokens[p].str,"$esp") == 0)
-		return cpu.esp;
-	if (strcmp(tokens[p].str,"$ebp") == 0)
-		return cpu.ebp;
-	if (strcmp(tokens[p].str,"$esi") == 0)
-		return cpu.esi;
-	if (strcmp(tokens[p].str,"$edi") == 0)
-		return cpu.edi;
-	if (strcmp(tokens[p].str,"$eip") == 0)
-		return cpu.eip;
-	return 0;
-}
-uint32_t eval(int p, int q);
-
-uint32_t hexToVal(int p)
-{
-	int i;
-	uint32_t n;
-	n = 0;
-	for (i = 2; i < strlen(tokens[p].str); i++)
-	{
-		if (tokens[p].str[i] > '9')
-			n = n * 16 + (int)tokens[p].str[i] - 87;
-		else n = n * 16 + (int)tokens[p].str[i] -48;
-	}
-	return n;
-}
-
-uint32_t dexToVal(int p)
-{
-	int i;
-	uint32_t n;
-	n = 0;
-	for (i = 0; i < strlen(tokens[p].str); i++)
-		n = n * 10 + (int)tokens[p].str[i] - 48;
-	return n;
-}
-
-uint32_t addrToVal(int p, int q)
-{
-	uint32_t n;
-	n = eval(p,q);
-	return vaddr_read(n,4);
-}
-
-uint32_t eval(int p,int q)
-{
-	if (p == q)
-	{
-		if (tokens[p].type == TK_REG)
-			return regToVal(p);
-		else if (tokens[p].type == TK_HEX)
-			return hexToVal(p);
-		else if (tokens[p].type == TK_DEX)
-			return dexToVal(p);
-		return 0;
-	}
-	else if (tokens[p].type == TK_lpar && tokens[q].type == TK_rpar)
-	{
-		return eval(p+1,q-1);
-	}
-	int i,domain,Inpair,domainTri;
-	domain = 0;
-	Inpair = 0;
-	domainTri = 0;
-	for (i = p; i <= q; i++)
-	{
-		if (Inpair == 0 && higherLevel(domain,tokens[i].type) && isOperator(i))
-		{
-			domain = tokens[i].type;
-			domainTri = i;
-		}
-		if (tokens[i].type == TK_lpar)
-			Inpair++;
-		if (tokens[i].type == TK_rpar)
-			Inpair--;
-	}
-	if (domain == TK_PLUS)
-		return eval(p, domainTri - 1) + eval(domainTri + 1, q);
-	if (domain == TK_MINUS)
-		return eval(p, domainTri - 1) - eval(domainTri + 1, q);
-	if (domain == TK_TIMES)
-		return eval(p, domainTri - 1) * eval(domainTri + 1, q);
-	if (domain == TK_DIV)
-		return eval(p, domainTri - 1) / eval(domainTri + 1, q);
-	if (domain == TK_EQ)
-		return (eval(p, domainTri - 1) == eval(domainTri + 1,q));
-	if (domain == TK_NEQ)
-		return (eval(p, domainTri - 1) != eval(domainTri + 1,q));
-	if (domain == TK_AND)
-		return (eval(p, domainTri - 1) && eval(domainTri + 1,q));
-	if (domain == TK_OR)
-		return (eval(p, domainTri - 1) || eval(domainTri + 1,q));
-	if (domain == 0)
-	{
-		if (tokens[p].type == TK_NOT)
-			return (eval(p + 1, q) == 0);
-		if (tokens[p].type == TK_TIMES)
-		{
-			tokens[p].type = TK_REF;
-			return addrToVal(p + 1, q);
-		}
-	}
-	return 0;
-}
-
 static bool make_token(char *e) {
   int position = 0;
   int i;
@@ -281,61 +72,274 @@ static bool make_token(char *e) {
   nr_token = 0;
 
   while (e[position] != '\0') {
-    /* Try all rules one by one. */
+    /* XXX: Try all rules one by one. */
     for (i = 0; i < NR_REGEX; i ++) {
       if (regexec(&re[i], e + position, 1, &pmatch, 0) == 0 && pmatch.rm_so == 0) {
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
-        position += substr_len;
-	if (rules[i].token_type == TK_NOTYPE)
-		break;
-        tokens[nr_token].type = rules[i].token_type;
+
+/*        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
+            i, rules[i].regex, position, substr_len, substr_len, substr_start);
+*/        position += substr_len;
+
         /* TODO: Now a new token is recognized with rules[i]. Add codes
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-        switch (rules[i].token_type) {
-		case TK_DEX:
-		{
-			for (int j = 0; j < substr_len; j++)
-				tokens[nr_token].str[j] = substr_start[j];
-			tokens[nr_token].str[substr_len] = '\0';
-		};
-		case TK_HEX:
-		{
-			for (int j = 0; j < substr_len; j++)
-				tokens[nr_token].str[j] = substr_start[j];
-			tokens[nr_token].str[substr_len] = '\0';
-		}
-		case TK_REG:
-		{
-			for (int j = 0; j < substr_len; j++)
-				tokens[nr_token].str[j] = substr_start[j];
-			tokens[nr_token].str[substr_len] = '\0';
-		}
-	}
-	nr_token ++;
-        break;
-
+	int j;
+      switch (rules[i].token_type) {
+		case TK_NUM_DEC://记下十进制数值
+		    tokens[nr_token].type=TK_NUM_DEC;
+		    for(j=0;j<substr_len;++j)
+		    {
+			tokens[nr_token].str[j]=substr_start[j];
+		    }
+		    if(j<32)
+		    {	tokens[nr_token].str[j]='\0';}
+			nr_token++;
+		    break;
+		case TK_NUM_HEX://记下0x数值
+		    tokens[nr_token].type=TK_NUM_HEX;
+		    for(j=0;j<substr_len;++j)
+		    {
+			tokens[nr_token].str[j]=substr_start[j];
+		    }
+		    if(j<32)
+		    {	tokens[nr_token].str[j]='\0';}
+		    nr_token++;
+	            break;
+		case TK_REG:	//记下寄存器编号
+		    tokens[nr_token].type=TK_REG;//register
+		    for(j=1;j<substr_len;++j)
+		    {
+			tokens[nr_token].str[j-1]=substr_start[j];
+		    }
+		    tokens[nr_token].str[j]='\0';
+		    nr_token++;
+		    break;
+		case TK_DEREF:	//解引用还是乘法
+		    if(nr_token>0&&(tokens[nr_token-1].type==TK_NUM_HEX||tokens[nr_token-1].type==TK_NUM_DEC||tokens[nr_token-1].type==TK_REG||tokens[nr_token-1].type==')'))
+		    tokens[nr_token].type='*';//乘法
+		    else
+			tokens[nr_token].type=TK_DEREF;//解引用
+		    nr_token++;
+		    break;
+		case TK_NOTYPE:
+		    break;
+         	default:
+		    tokens[nr_token].type=rules[i].token_type;
+		    nr_token++; 
+		    break; 
+        }
+	break;
       }
     }
-
     if (i == NR_REGEX) {
       printf("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
       return false;
     }
   }
-
-  return true;
+    return true;
 }
 
+int start, end;
+
+uint32_t expression_value(bool*);
+
+uint32_t term_value(bool*);
+
+uint32_t factor_value(bool*);
+
 uint32_t expr(char *e, bool *success) {
-  if (!make_token(e)) {
-    *success = false;
+    *success=true;
+if (!make_token(e)) {
+   *success = false;
     return 0;
   }
-  uint32_t ans = eval(0, nr_token-1);
-    *success = true;
+  start=0;
+  end=nr_token-1;
   /* TODO: Insert codes to evaluate the expression. */
-  return ans;
+  *success=true;
+  return expression_value(success);
+}
+uint32_t reg_value(char* reg,bool* flag)
+{
+    uint32_t ret=-1;    
+    if(strcmp(reg, "eax")==0)
+	ret=cpu.eax;
+    else if(strcmp(reg, "ebx")==0)
+	ret=cpu.ebx;
+    else if(strcmp(reg, "ecx")==0)
+	ret=cpu.ecx;
+    else if(strcmp(reg, "edx")==0)
+	ret=cpu.edx;
+    else if(strcmp(reg, "esp")==0)
+	ret=cpu.esp;
+    else if(strcmp(reg, "ebp")==0)
+	ret=cpu.ebp;
+    else if(strcmp(reg, "esi")==0)
+	ret=cpu.esi;
+    else if(strcmp(reg, "edi")==0)
+	ret=cpu.edi;
+    else if(strcmp(reg, "eip")==0)
+	ret=cpu.eip;
+    else if(strcmp(reg, "al")==0)
+	ret=cpu.al;
+    else if(strcmp(reg, "ah")==0)
+	ret=cpu.ah;
+    else if(strcmp(reg, "bl")==0)
+	ret=cpu.bl;
+    else if(strcmp(reg, "bh")==0)
+	ret=cpu.bh;
+    else if(strcmp(reg, "cl")==0)
+	ret=cpu.cl;
+    else if(strcmp(reg, "ch")==0)
+	ret=cpu.ch;
+    else if(strcmp(reg, "dl")==0)
+	ret=cpu.dl;
+    else if(strcmp(reg, "dh")==0)
+	ret=cpu.dh;
+    else if(strcmp(reg, "ax")==0)
+	ret=cpu.ax;
+    else if(strcmp(reg, "bx")==0)
+	ret=cpu.bx;
+    else if(strcmp(reg, "cx")==0)
+	ret=cpu.cx;
+    else if(strcmp(reg, "dx")==0)
+	ret=cpu.dx;
+    else if(strcmp(reg, "si")==0)
+	ret=cpu.si;
+    else if(strcmp(reg, "di")==0)
+	ret=cpu.di;
+    else if(strcmp(reg, "sp")==0)
+	ret=cpu.sp;
+    else if(strcmp(reg, "bp")==0)
+	ret=cpu.bp;
+    else
+    {
+        *flag=false;
+	    printf("No such register\n");
+    }
+    return ret;
+}    
+uint32_t expression_value(bool* flag)
+{
+    if(start>end||*flag==false)
+	    return 0;
+    int result=term_value(flag);
+    while(1)
+    {
+	    int op=tokens[start].type;
+	    if(op=='+'||op=='-')
+	    {
+	        start++;
+	        int value=term_value(flag);
+	        if(op=='+')
+		        result+=value;
+	        else
+		        result-=value;
+	    }
+	    else if(op==TK_EQ||op==TK_NOEQ)
+	    {
+	        start++;
+	        int value=term_value(flag);
+	        if(op==TK_EQ)
+		        result=(result==value);
+	        else
+		        result=(result!=value);
+	    }//好像没有问题了？
+	    else
+            break;
+    }
+    return result;
+}
+uint32_t term_value(bool* flag)
+{
+    if(start>end||*flag==false)
+	return 0;
+    int result=factor_value(flag);
+    while(1)
+    {
+	int op=tokens[start].type;
+	if(op=='*'||op=='/')
+	{
+	    start++;
+	    if(start>end)
+		break;
+	    int value=factor_value(flag);
+	    if(op=='*')
+	    {	result*=value;}
+	    else
+	    {	
+		if(value==0)
+		{   
+		    printf("Divided by 0!\n");
+		    *flag=false;
+            return 0;
+		}
+		result/=value;
+	    }
+	}
+	else
+	    break;
+    }
+    return result;
+}
+uint32_t factor_value(bool* flag)
+{
+    if(start>end||*flag==false)
+	    return 0;
+    int result=0;
+    int c=tokens[start].type;
+    if(c=='(')
+    {
+	    start++;
+	    result=expression_value(flag);
+	    if(tokens[start].type!=')')
+        {
+            *flag=false;
+            printf("Syntax error\n");
+        }
+        else
+            start++;
+    }
+    else if(c==TK_DEREF)//暂时先规定解引用后面被括号包围吧
+    {
+        start++;//去掉*
+        if(tokens[start].type!='(')
+        {
+            *flag=false;
+            printf("Syntax error\n");
+            return 0;
+        }
+        else
+        {    start++;}
+	    result=vaddr_read(expression_value(flag), 4);
+        if(tokens[start].type!=')')
+        {
+            *flag=false;
+            printf("Syntax error\n");
+        }
+        else
+	        start++;//去掉)
+    }	    
+     else
+    {
+        if(c==TK_NUM_DEC)
+	    {
+	        result=atoi(tokens[start].str);
+	        start++;
+	    }
+	    else if(c==TK_NUM_HEX)
+	    {
+	        result=(int)strtol(tokens[start].str, NULL, 0);
+	        start++;
+	    }
+	    else if(c==TK_REG)
+	    {
+	        result=reg_value(tokens[start].str, flag);
+	        start++;
+	    }
+    }
+    return result;
 }
