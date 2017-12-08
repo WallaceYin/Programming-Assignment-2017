@@ -6,7 +6,7 @@ make_EHelper(mov) {
 }
 
 make_EHelper(push) {
-  rtl_sext(&id_dest->val, &id_dest->val, id_dest->width);
+  //rtl_sext(&id_dest->val, &id_dest->val, id_dest->width);
   rtl_push(&id_dest->val);
   print_asm_template1(push);
 }
@@ -18,63 +18,25 @@ make_EHelper(pop) {
 }
 
 make_EHelper(pusha) {
-  if (decoding.is_operand_size_16)
-  {
-    t0 = reg_w(4);
-    for (int i = 0; i < 8; i++)
-    {
-      if (i != 4)
-      {
-        t1 = reg_w(i);
-        rtl_sext(&t1, &t1, 2);
-        rtl_push(&t1);
-      }
-      else
-      {
-        rtl_sext(&t0, &t0, 2);
-        rtl_push(&t0);
-      }
-    }
-  }
-  else
-  {
     t0 = reg_l(4);
     for (int i = 0; i < 8; i++)
     {
       if (i != 4)
       {
         t1 = reg_l(i);
-        rtl_sext(&t1, &t1, 4);
+//        rtl_sext(&t1, &t1, 4);
         rtl_push(&t1);
       }
       else
       {
-        rtl_sext(&t0, &t0, 4);
+//        rtl_sext(&t0, &t0, 4);
         rtl_push(&t0);
       }
     }
-  }
   print_asm("pusha");
 }
 
 make_EHelper(popa) {
-  if (decoding.is_operand_size_16)
-  {
-    for (int i = 7; i >= 0; i--)
-    {
-      if (i != 4)
-      {
-        rtl_pop(&t1);
-        reg_w(i) = t1;
-      }
-      else
-      {
-        rtl_pop(&t1);
-      }
-    }
-  }
-  else
-  {
     for (int i = 7; i >= 0; i--)
     {
       if (i != 4)
@@ -87,23 +49,14 @@ make_EHelper(popa) {
         rtl_pop(&t1);
       }
     }
-  }
   print_asm("popa");
 }
 
 make_EHelper(leave) {
   t0 = reg_l(5);
   reg_l(4) = t0;
-  if (decoding.is_operand_size_16)
-  {
-    rtl_pop(&t0);
-    reg_w(5) = t0;
-  }
-  else
-  {
-    rtl_pop(&t0);
-    reg_l(5) = t0;
-  }
+  rtl_pop(&t0);
+  reg_l(5) = t0;
   print_asm("leave");
 }
 
