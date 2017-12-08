@@ -80,7 +80,6 @@ make_EHelper(inc) {
 make_EHelper(dec) {
   rtl_subi(&t2, &id_dest->val, 1);
   operand_write(id_dest, &t2);
-	Log("dec !!");
   rtl_update_ZFSF(&t2, id_dest->width);
 
   rtl_sltu(&t0, &t2, &id_dest->val);
@@ -100,7 +99,6 @@ make_EHelper(neg) {
   rtl_set_CF(&t0);
   t2 = -id_dest->val;
   operand_write(id_dest, &t2);
-	Log("neg!!");
   rtl_update_ZFSF(&t2, id_dest->width);
 
   rtl_mv(&t2, &id_dest->val);
