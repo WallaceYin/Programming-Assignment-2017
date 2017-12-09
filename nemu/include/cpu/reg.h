@@ -58,7 +58,7 @@ uint32_t EFLAGS;
     uint8_t IF:1;
     uint8_t ud3:1;
     uint8_t OF:1;
-    uint32_t ud4:22;
+    uint32_t ud4:21;
 }eflags;
 
 };
