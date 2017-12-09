@@ -18,12 +18,10 @@ make_EHelper(and) {
 }
 
 make_EHelper(xor) {
-  rtl_mv(&t2,&id_dest->val);
-  rtl_xor(&id_dest->val, &id_src->val, &t2);
-  rtl_mv(&t2, &id_dest->val);
+  rtl_xor(&t2, &id_dest->val, &id_src->val);
   operand_write(id_dest, &t2);
-  rtl_set_CF(&tzero);
-  rtl_set_OF(&tzero);
+  cpu.eflags.CF=0;
+  cpu.eflags.OF=0;
   rtl_update_ZFSF(&t2, id_dest->width);
   print_asm_template2(xor);
 }
