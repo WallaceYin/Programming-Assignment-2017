@@ -77,26 +77,23 @@ make_EHelper(leave) {
 
 make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
-    t1 = cpu.eax;
-    rtl_msb(&t0, &t1, 2);
-    if (t0)
-      cpu.edx = 0x0000ffff | cpu.edx;
+    if((cpu.ax & 0x8000)>>15==1)
+        cpu.dx=0xffff;
     else
-      cpu.edx = 0xffff0000 & cpu.edx;
+        cpu.dx=0;
   }
   else {
-    t1 = cpu.eax;
-    rtl_msb(&t0, &t1, 4);
-    if (t0)
-      cpu.edx = 0xffffffff;
+    //TODO();
+    if((cpu.eax & 0x80000000)>>31==1)
+        cpu.edx=0xffffffff;
     else
-      cpu.edx = 0;
+        cpu.edx=0;
   }
   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
 }
 
 make_EHelper(cwtl) {
-  if (decoding.is_operand_size_16) {
+  /*if (decoding.is_operand_size_16) {
     t0 = reg_b(0);
     rtl_sext(&t1, &t0, 1);
     reg_w(0) = t1;
@@ -104,7 +101,19 @@ make_EHelper(cwtl) {
   else {
     t0 = reg_w(0);
     rtl_sext(&t1, &t0, 2);
-    reg_l(0) = t1;
+    reg_l(0) = t1;*/
+  if (decoding.is_operand_size_16) {
+  if((cpu.al & 0x80)>>7==1)
+      cpu.ax=0xff00+cpu.al;
+  else
+      cpu.ax=cpu.al;
+  }
+  else {
+    //TODO();
+    if((cpu.ax & 0x8000)>>15==1)
+        cpu.eax=0xffff0000+cpu.ax;
+    else
+        cpu.eax=cpu.ax;
   }
 
   print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");
