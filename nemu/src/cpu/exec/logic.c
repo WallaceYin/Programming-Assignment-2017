@@ -89,29 +89,25 @@ make_EHelper(not) {
 
 make_EHelper(rcl)
 {
-    rtl_rcl(&t3, &id_dest->val, &id_src->val, id_dest->width);
-    operand_write(id_dest, &t3);
+    Log("rcl!!");
     print_asm_template2(rcl);
 }
 
 make_EHelper(rcr)
 {
-    rtl_rcr(&t3, &id_dest->val, &id_src->val, id_dest->width);
-    operand_write(id_dest, &t3);
+    Log("rcr");
     print_asm_template2(rcr);
 }
 
 make_EHelper(rol)
 {
-    rtl_rol(&t3, &id_dest->val, &id_src->val, id_dest->width);
-    operand_write(id_dest, &t3);
+    Log("rol");
     print_asm_template2(rol);
 }
 
 make_EHelper(ror)
 {
-    rtl_ror(&t3, &id_dest->val, &id_src->val, id_dest->width);
-    operand_write(id_dest, &t3);
+    Log("ror");
     print_asm_template2(ror);
 }
 

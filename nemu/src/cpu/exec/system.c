@@ -10,7 +10,7 @@ make_EHelper(lidt) {
   rtl_lm(&t0, &t1, 4);
   if(decoding.is_operand_size_16)
     t0=t0&0x00ffffff;*/
-  cpu.idtr.base=id_dest->val;
+  cpu.IDTR.base=id_dest->val;
   print_asm_template1(lidt);
 }
 
@@ -48,8 +48,8 @@ make_EHelper(iret) {
   decoding.jmp_eip=t0;
   //printf("%d\n", t0);
   rtl_pop(&t0);
-  cpu.CS=(uint16_t)t0;
-  rtl_pop(&cpu.EFLAGS);
+  cpu.cs=(uint16_t)t0;
+  rtl_pop(&cpu.eflags_init);
   decoding.is_jmp=1;
 
   print_asm("iret");
