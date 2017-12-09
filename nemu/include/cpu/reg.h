@@ -19,7 +19,7 @@ enum { R_AL, R_CL, R_DL, R_BL, R_AH, R_CH, R_DH, R_BH };
 typedef struct {
 
 union {
-    union{    
+    union{
         uint32_t _32;
         uint16_t _16;
         uint8_t _8[2];
@@ -29,7 +29,7 @@ union {
   /* In NEMU, rtlreg_t is exactly uint32_t. This makes RTL instructions
    * in PA2 able to directly access these registers.
    */
-	struct{ 
+	struct{
 	reg1(eax,ax,al,ah);
 	reg1(ecx,cx,cl,ch);
 	reg1(edx,dx,dl,dh);
@@ -58,7 +58,7 @@ uint32_t EFLAGS;
     uint8_t IF:1;
     uint8_t ud3:1;
     uint8_t OF:1;
-    uint32_t ud4:20;
+    uint32_t ud4:22;
 }eflags;
 
 };
