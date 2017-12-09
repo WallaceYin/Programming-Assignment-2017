@@ -3,10 +3,8 @@
 
 #include <stdio.h>
 #include <assert.h>
-
 #ifdef DEBUG
 extern FILE* log_fp;
-
 #	define Log_write(format, ...) \
   do { \
     if (log_fp != NULL) { \
@@ -35,6 +33,15 @@ extern FILE* log_fp;
       fprintf(stderr, __VA_ARGS__); \
       fprintf(stderr, "\33[0m\n"); \
       assert(cond); \
+    } \
+  } while (0)
+#define Warning(cond, ...) \
+  do { \
+    if (!(cond)) { \
+      fflush(stdout); \
+      fprintf(stderr, "\33[1;31m"); \
+      fprintf(stderr, __VA_ARGS__); \
+      fprintf(stderr, "\33[0m\n"); \
     } \
   } while (0)
 
