@@ -13,56 +13,84 @@ enum { R_AL, R_CL, R_DL, R_BL, R_AH, R_CH, R_DH, R_BH };
  * cpu.gpr[1]._8[1], we will get the 'ch' register. Hint: Use `union'.
  * For more details about the register encoding scheme, see i386 manual.
  */
-#define reg1(a,b,c,d) union{rtlreg_t a;uint16_t b;struct{uint8_t c;uint8_t d;};};
-#define reg2(a,b) union{rtlreg_t a;uint16_t b;};
+ #define reg1(a,b,c,d) union{rtlreg_t a;uint16_t b;struct{uint8_t c;uint8_t d;};};
+ #define reg2(a,b) union{rtlreg_t a;uint16_t b;};
 
 typedef struct {
+  union {
+    union {
+    uint32_t _32;
+    uint16_t _16;
+    uint8_t _8[2];
+    } gpr[8];
 
-union {
-    union{
-        uint32_t _32;
-        uint16_t _16;
-        uint8_t _8[2];
-	} gpr[8];
   /* Do NOT change the order of the GPRs' definitions. */
 
   /* In NEMU, rtlreg_t is exactly uint32_t. This makes RTL instructions
    * in PA2 able to directly access these registers.
    */
-	struct{
-	reg1(eax,ax,al,ah);
-	reg1(ecx,cx,cl,ch);
-	reg1(edx,dx,dl,dh);
-	reg1(ebx,bx,bl,bh);
-	reg2(esp,sp);
-	reg2(ebp,bp);
-	reg2(esi,si);
-	reg2(edi,di);
-//	rtlreg_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
-  	};
-     };
-vaddr_t eip;
-rtlreg_t CS;
-struct{
-    rtlreg_t limit;
-    rtlreg_t base;
-}idtr;
-union{
-uint32_t EFLAGS;
-    struct{
-    uint8_t CF:1;
-    uint8_t ud1:5;
-    uint8_t ZF:1;
-    uint8_t SF:1;
-    uint8_t ud2:1;
-    uint8_t IF:1;
-    uint8_t ud3:1;
-    uint8_t OF:1;
-    uint32_t ud4:21;
-}eflags;
-
-};
-}CPU_state;
+  struct {
+    reg1(eax,ax,al,ah);
+  	reg1(ecx,cx,cl,ch);
+  	reg1(edx,dx,dl,dh);
+  	reg1(ebx,bx,bl,bh);
+  	reg2(esp,sp);
+  	reg2(ebp,bp);
+  	reg2(esi,si);
+  	reg2(edi,di);
+  //  rtlreg_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
+  };
+  };
+  vaddr_t eip;
+  union {
+    struct {
+      /*uint32_t :8;
+      uint32_t :8;
+      uint32_t VM:1;
+      uint32_t RF:1;
+      uint32_t :1;
+      uint32_t NT:1;
+      uint32_t IOPL:2;
+      uint32_t OF:1;
+      uint32_t DF:1;
+      uint32_t IF:1;
+      uint32_t TF:1;
+      uint32_t SF:1;
+      uint32_t ZF:1;
+      uint32_t :1;
+      uint32_t AF:1;
+      uint32_t :1;
+      uint32_t PF:1;
+      uint32_t :1;
+      uint32_t CF:1;*/
+      uint32_t CF:1;
+      uint32_t :1;
+      uint32_t PF:1;
+      uint32_t :1;
+      uint32_t AF:1;
+      uint32_t :1;
+      uint32_t ZF:1;
+      uint32_t SF:1;
+      uint32_t TF:1;
+      uint32_t IF:1;
+      uint32_t DF:1;
+      uint32_t OF:1;
+      uint32_t IOPL:2;
+      uint32_t NT:1;
+      uint32_t :1;
+      uint32_t RF:1;
+      uint32_t VM:1;
+      uint32_t :8;
+      uint32_t :7;
+    } eflags;
+    rtlreg_t eflags_init;
+  };
+  struct {
+    uint16_t limit;
+    uint32_t base;
+  } IDTR;
+  rtlreg_t cs;
+} CPU_state;
 
 extern CPU_state cpu;
 
