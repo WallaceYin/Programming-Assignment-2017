@@ -163,7 +163,26 @@ static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
       }
     }
   else
-    *dest = *src1;
+  {
+    switch (width) {
+      case 1:
+      {
+        *dest = 0x000000ff & *src1;
+        break;
+      }
+      case 2:
+      {
+        *dest = 0x0000ffff & *src1;
+        break;
+      }
+      case 4:
+      {
+        *dest = *src1;
+        break;
+      }
+    }
+  }
+    //*dest = *src1;
 }
 
 static inline void rtl_push(const rtlreg_t* src1) {

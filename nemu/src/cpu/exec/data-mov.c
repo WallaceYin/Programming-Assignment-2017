@@ -18,7 +18,7 @@ make_EHelper(pop) {
 }
 
 make_EHelper(pusha) {
-    t0 = reg_l(4);
+    /*t0 = reg_l(4);
     for (int i = 0; i < 8; i++)
     {
       if (i != 4)
@@ -32,12 +32,21 @@ make_EHelper(pusha) {
 //        rtl_sext(&t0, &t0, 4);
         rtl_push(&t0);
       }
-    }
+    }*/
+  t1 = cpu.esp;
+  rtl_push(&cpu.eax);
+  rtl_push(&cpu.ecx);
+  rtl_push(&cpu.edx);
+  rtl_push(&cpu.ebx);
+  rtl_push(&t1);
+  rtl_push(&cpu.ebp);
+  rtl_push(&cpu.esi);
+  rtl_push(&cpu.edi);
   print_asm("pusha");
 }
 
 make_EHelper(popa) {
-    for (int i = 7; i >= 0; i--)
+    /*for (int i = 7; i >= 0; i--)
     {
       if (i != 4)
       {
@@ -48,34 +57,40 @@ make_EHelper(popa) {
       {
         rtl_pop(&t1);
       }
-    }
+    }*/
+  rtl_pop(&cpu.edi);
+  rtl_pop(&cpu.esi);
+  rtl_pop(&cpu.ebp);
+  rtl_pop(&t1);
+  rtl_pop(&cpu.ebx);
+  rtl_pop(&cpu.edx);
+  rtl_pop(&cpu.ecx);
+  rtl_pop(&cpu.eax);
   print_asm("popa");
 }
 
 make_EHelper(leave) {
-  t0 = reg_l(5);
-  reg_l(4) = t0;
-  rtl_pop(&t0);
-  reg_l(5) = t0;
+  cpu.esp=cpu.ebp;
+  rtl_pop(&cpu.ebp);
   print_asm("leave");
 }
 
 make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
-    t1 = reg_w(0);
+    t1 = cpu.eax;
     rtl_msb(&t0, &t1, 2);
     if (t0)
-      reg_w(2) = 0xffff;
+      cpu.edx = 0x0000ffff | cpu.edx;
     else
-      reg_w(2) = 0;
+      cpu.edx = 0xffff0000 & cpu.edx;
   }
   else {
-    t1 = reg_l(0);
+    t1 = cpu.eax;
     rtl_msb(&t0, &t1, 4);
     if (t0)
-      reg_l(2) = 0xffffffff;
+      cpu.edx = 0xffffffff;
     else
-      reg_l(2) = 0;
+      cpu.edx = 0;
   }
   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
 }
