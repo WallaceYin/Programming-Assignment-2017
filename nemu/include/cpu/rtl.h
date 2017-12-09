@@ -143,8 +143,8 @@ static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width);
 static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- signext(src1[(width * 8 - 1) .. 0])
   rtlreg_t msb = 0;
-  rtl_msb(&msb, src1, width);
-  if (msb)
+  //rtl_msb(&msb, src1, width);
+  /*if (msb)
     switch (width) {
       case 1:
       {
@@ -182,7 +182,27 @@ static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
       }
     }
   }
-    //*dest = *src1;
+    *dest = *src1;
+    */
+  switch (width) {
+    case 1:
+      msb = (*src1 & 0x80)>>7;
+      if(msb)
+          *dest = 0xffffff00 | *src1;
+      else
+          *dest = *src1;
+      break;
+    case 2:
+    msb = (*src1 & 0x8000)>>15;
+    if(msb)
+         *dest = 0xffff0000 | *src1;
+     else
+         *dest = *src1;
+     break;
+     case 4:
+          *dest=*src1;
+          break;
+  }
 }
 
 static inline void rtl_push(const rtlreg_t* src1) {
@@ -225,10 +245,24 @@ static inline void rtl_neq0(rtlreg_t* dest, const rtlreg_t* src1) {
 
 static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- src1[width * 8 - 1]
-  switch (width) {
+  /*switch (width) {
     case 1: *dest = ((*src1 & 0x00000080) > 0);break;
     case 2: *dest = ((*src1 & 0x00008000) > 0);break;
-    case 4: *dest = ((*src1 & 0x80000000) > 0);break;
+    case 4: *dest = ((*src1 & 0x80000000) > 0);break;*/
+    switch(width)
+  {
+      case 1:
+          *dest = (*src1 & 0x80)>>7;
+          break;
+      case 2:
+          *dest = (*src1 & 0x8000)>>15;
+          break;
+      case 4:
+          *dest = *src1>>31;
+          break;
+      default:
+          assert(0);
+          break;
   }
 }
 
@@ -246,11 +280,25 @@ static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
 
 static inline void rtl_update_SF(const rtlreg_t* result, int width) {
   // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
-  rtlreg_t res = 0;
+  /*rtlreg_t res = 0;
   rtl_msb(&res, result, width);
   res = res & 0x1;
-  rtl_set_SF(&res);
-
+  rtl_set_SF(&res);*/
+  switch(width)
+  {
+    case 1:
+      cpu.eflags.SF = (*result & 0x80)>>7;
+      break;
+    case 2:
+      cpu.eflags.SF = (*result & 0x8000)>>15;
+      break;
+    case 4:
+      cpu.eflags.SF = (*result >> 31);
+      break;
+    default:
+      assert(0);
+      break;
+    }
 }
 
 static inline void rtl_update_ZFSF(const rtlreg_t* result, int width) {

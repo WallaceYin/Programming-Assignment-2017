@@ -13,6 +13,8 @@ enum { R_AL, R_CL, R_DL, R_BL, R_AH, R_CH, R_DH, R_BH };
  * cpu.gpr[1]._8[1], we will get the 'ch' register. Hint: Use `union'.
  * For more details about the register encoding scheme, see i386 manual.
  */
+ #define reg1(a,b,c,d) union{rtlreg_t a;uint16_t b;struct{uint8_t c;uint8_t d;};};
+ #define reg2(a,b) union{rtlreg_t a;uint16_t b;};
 
 typedef struct {
   union {
@@ -28,7 +30,15 @@ typedef struct {
    * in PA2 able to directly access these registers.
    */
   struct {
-    rtlreg_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
+    reg1(eax,ax,al,ah);
+  	reg1(ecx,cx,cl,ch);
+  	reg1(edx,dx,dl,dh);
+  	reg1(ebx,bx,bl,bh);
+  	reg2(esp,sp);
+  	reg2(ebp,bp);
+  	reg2(esi,si);
+  	reg2(edi,di);
+  //  rtlreg_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
   };
   };
   vaddr_t eip;
