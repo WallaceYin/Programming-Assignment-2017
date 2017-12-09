@@ -42,10 +42,10 @@ make_EHelper(mov_cr2r) {
 }
 
 make_EHelper(int) {
-  t0 = id_dest->val;
+  /*t0 = id_dest->val;
   uint8_t NO;
-  NO = t0 & 0xff;
-  raise_intr(NO, *eip);
+  NO = t0 & 0xff;*/
+  raise_intr(id_dest->val, *eip);
   print_asm("int %s", id_dest->str);
 
 #ifdef DIFF_TEST
