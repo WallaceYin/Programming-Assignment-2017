@@ -78,7 +78,7 @@ make_EHelper(leave) {
 make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
     if((cpu.ax & 0x8000)>>15==1)
-        cpu.dx=0xffff;
+        cpu.dx=0x0000ffff;
     else
         cpu.dx=0;
   }

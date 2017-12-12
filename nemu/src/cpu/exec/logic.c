@@ -3,8 +3,10 @@
 make_EHelper(test) {
   //TODO();
   rtl_and(&t2, &id_dest->val, &id_src->val);
-  cpu.eflags.CF=0;
-  cpu.eflags.OF=0;
+  //cpu.eflags.CF=0;
+  //cpu.eflags.OF=0;
+  rtl_set_CF(&tzero);
+  rtl_set_OF(&tzero);
   rtl_update_ZFSF(&t2, id_dest->width);
   print_asm_template2(test);
 }
@@ -13,8 +15,10 @@ make_EHelper(and) {
   //TODO();
   rtl_and(&t2, &id_dest->val, &id_src->val);
   operand_write(id_dest, &t2);
-  cpu.eflags.CF=0;
-  cpu.eflags.OF=0;
+  //cpu.eflags.CF=0;
+  //cpu.eflags.OF=0;
+  rtl_set_CF(&tzero);
+  rtl_set_OF(&tzero);
   rtl_update_ZFSF(&t2, id_dest->width);
   print_asm_template2(and);
 }
@@ -23,8 +27,10 @@ make_EHelper(xor) {
   //TODO();
   rtl_xor(&t2, &id_dest->val, &id_src->val);
   operand_write(id_dest, &t2);
-  cpu.eflags.CF=0;
-  cpu.eflags.OF=0;
+  //cpu.eflags.CF=0;
+  //cpu.eflags.OF=0;
+  rtl_set_CF(&tzero);
+  rtl_set_OF(&tzero);
   rtl_update_ZFSF(&t2, id_dest->width);
   print_asm_template2(xor);
 }
@@ -33,8 +39,10 @@ make_EHelper(or) {
   //TODO();
   rtl_or(&t2, &id_dest->val, &id_src->val);
   operand_write(id_dest, &t2);
-  cpu.eflags.CF=0;
-  cpu.eflags.OF=0;
+  //cpu.eflags.CF=0;
+  //cpu.eflags.OF=0;
+  rtl_set_CF(&tzero);
+  rtl_set_OF(&tzero);
   rtl_update_ZFSF(&t2, id_dest->width);
   print_asm_template2(or);
 }
@@ -110,4 +118,3 @@ make_EHelper(ror)
     Log("ror");
     print_asm_template2(ror);
 }
-
