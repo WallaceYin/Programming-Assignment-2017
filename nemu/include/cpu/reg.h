@@ -79,11 +79,26 @@ typedef struct {
     } eflags;
     rtlreg_t eflags_init;
   };
+  uint32_t cs;
   struct {
     uint16_t limit;
     uint32_t base;
   } IDTR;
-  rtlreg_t cs;
+  union {
+    struct {
+      uint32_t PE:1;
+      uint32_t :30;
+      uint32_t PG:1;
+    } cr0;
+    uint32_t cr0_init;
+  };
+  union {
+    struct {
+      uint32_t :12;
+      uint32_t addr:20;
+    } cr3;
+    uint32_t cr3_init;
+  };
 } CPU_state;
 
 extern CPU_state cpu;

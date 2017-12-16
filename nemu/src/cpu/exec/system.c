@@ -4,7 +4,7 @@ void diff_test_skip_nemu();
 
 make_EHelper(lidt) {
   //TODO();
-  /*rtl_lm(&t0, &id_dest->addr, 2);  
+  /*rtl_lm(&t0, &id_dest->addr, 2);
   cpu.idtr.limit=t0;
   t1=id_dest->addr+2;
   rtl_lm(&t0, &t1, 4);
@@ -15,14 +15,20 @@ make_EHelper(lidt) {
 }
 
 make_EHelper(mov_r2cr) {
-  TODO();
-
+  //TODO();
+  if (id_dest->reg == 0)
+    cpu.cr0_init = id_src->val;
+  else if (id_dest->reg == 3)
+    cpu.cr3_init = id_src->val;
   print_asm("movl %%%s,%%cr%d", reg_name(id_src->reg, 4), id_dest->reg);
 }
 
 make_EHelper(mov_cr2r) {
-  TODO();
-
+  //TODO();
+  if (id_src->reg == 0)
+    operand_write(id_dest,&cpu.cr0_init);
+  else if (id_src->reg == 3)
+    operand_write(id_dest,&cpu.cr3_init);
   print_asm("movl %%cr%d,%%%s", id_src->reg, reg_name(id_dest->reg, 4));
 
 #ifdef DIFF_TEST
@@ -33,7 +39,7 @@ extern void raise_intr(uint8_t NO, vaddr_t ret_addr);
 
 make_EHelper(int) {
   //TODO();
-     
+
   raise_intr(id_dest->val, *eip);
   print_asm("int %s", id_dest->str);
 
