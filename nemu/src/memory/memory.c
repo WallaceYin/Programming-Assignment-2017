@@ -3,6 +3,12 @@
 
 #define PMEM_SIZE (128 * 1024 * 1024)
 
+#define PDX(va)     (((uint32_t)(va) >> PDXSHFT) & 0x3ff)
+#define PTX(va)     (((uint32_t)(va) >> PTXSHFT) & 0x3ff)
+#define OFF(va)     ((uint32_t)(va) & 0xfff)
+#define PTXSHFT   12      // Offset of PTX in a linear address
+#define PDXSHFT   22      // Offset of PDX in a linear address
+
 #define pmem_rw(addr, type) *(type *)({\
     Assert(addr < PMEM_SIZE, "physical address(0x%08x) is out of bound", addr); \
     guest_to_host(addr); \
@@ -32,17 +38,37 @@ void paddr_write(paddr_t addr, int len, uint32_t data) {
   }
 
 }
+paddr_t page_translate(vaddr_t);
 
 uint32_t vaddr_read(vaddr_t addr, int len) {
-  //if data across the boundary
-  //paddr_t paddr = page_translate(addr);
-  paddr_t paddr = addr;
-  return paddr_read(paddr, len);
+  if (((uint32_t)(addr & 0xfff) + (uint32_t)len) >= 0x1000)
+  {
+    assert(0);
+    return 0;
+  }
+  else
+  {
+    uint32_t paddr = page_translate(addr);
+    return paddr_read(paddr, len);
+  }
 }
 
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
-  //if data across the boundary
-  //paddr_t paddr = page_translate(addr);
-  paddr_t paddr = addr;
-  paddr_write(paddr, len, data);
+  if (((uint32_t)(addr & 0xfff) + (uint32_t)len) >= 0x1000)
+    assert(0);
+  else
+  {
+    uint32_t paddr = page_translate(addr);
+    paddr_write(paddr, len, data);
+  }
+}
+
+paddr_t page_translate(vaddr_t addr) {
+  uint32_t Dir_entry;
+  Dir_entry = paddr_read(((PDX(addr) << 2) | (cpu.cr3.addr << 12)), 4);
+  assert((Dir_entry & 0x001) > 0);
+  uint32_t Tab_entry;
+  Tab_entry = paddr_read(((PTX(addr) << 2) | (Dir_entry & 0xfffff000)), 4);
+  assert((Tab_entry & 0x001) > 0);
+  return ((Tab_entry & 0xfffff000) | OFF(addr));
 }
