@@ -64,6 +64,8 @@ void vaddr_write(vaddr_t addr, int len, uint32_t data) {
 }
 
 paddr_t page_translate(vaddr_t addr) {
+  if (cpu.cr0.PG == 0)
+    return (paddr_t)addr;
   uint32_t Dir_entry;
   Dir_entry = paddr_read(((PDX(addr) << 2) | (cpu.cr3.addr << 12)), 4);
   assert((Dir_entry & 0x001) > 0);
