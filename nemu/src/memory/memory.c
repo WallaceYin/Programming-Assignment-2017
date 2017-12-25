@@ -64,7 +64,7 @@ void vaddr_write(vaddr_t addr, int len, uint32_t data) {
     paddr_write(addr, len, data);
     return;
   }
-  if (((uint32_t)(addr & 0xfff) + (uint32_t)len) >= 0x1000)
+  if (((uint32_t)(addr & 0xfff) + (uint32_t)len) > 0x1000)
   {
     uint32_t paddr_1 = page_translate(addr);
     uint32_t paddr_2 = page_translate((uint32_t)addr + (0x1000 - (uint32_t)(addr & 0xfff)));
