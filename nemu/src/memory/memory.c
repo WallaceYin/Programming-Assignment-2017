@@ -47,11 +47,9 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
   {
     uint32_t paddr_1 = page_translate(addr);
     uint32_t paddr_2 = page_translate((uint32_t)addr + (0x1000 - (uint32_t)(addr & 0xfff)));
-    switch (len) {
-      case 2: return paddr_read(paddr_1, (0x1000 - (uint32_t)(addr & 0xfff))) | paddr_read(paddr_2, (uint32_t)(len - 0x1000 + (addr & 0xfff))) << 8;
-      case 4: return paddr_read(paddr_1, (0x1000 - (uint32_t)(addr & 0xfff))) | paddr_read(paddr_2, (uint32_t)(len - 0x1000 + (addr & 0xfff))) << (8 * (0x1000 - (addr & 0xfff)));
-      default: assert(0);
-    }
+    uint32_t len_1 = 0x1000 - (uint32_t)(addr & 0xfff);
+    uint32_t len_2 = len - len_1;
+    return paddr_read(paddr_1, len_1) | paddr_read(paddr_2, len_2) << (8 * len_1);
   }
   else
   {
@@ -67,7 +65,14 @@ void vaddr_write(vaddr_t addr, int len, uint32_t data) {
     return;
   }
   if (((uint32_t)(addr & 0xfff) + (uint32_t)len) >= 0x1000)
-    assert(0);
+  {
+    uint32_t paddr_1 = page_translate(addr);
+    uint32_t paddr_2 = page_translate((uint32_t)addr + (0x1000 - (uint32_t)(addr & 0xfff)));
+    uint32_t len_1 = 0x1000 - (uint32_t)(addr & 0xfff);
+    uint32_t len_2 = len - len_1;
+    paddr_write(paddr_1, len_1, (data << (32 - 8 * len_1)) >> (32 - 8 * len_1));
+    paddr_write(paddr_2, len_2, (data >> (8 * len_1)));
+  }
   else
   {
     uint32_t paddr = page_translate(addr);
