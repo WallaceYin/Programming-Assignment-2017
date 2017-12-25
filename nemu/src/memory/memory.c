@@ -45,9 +45,13 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
     return paddr_read(addr, len);
   if (((uint32_t)(addr & 0xfff) + (uint32_t)len) > 0x1000)
   {
-    Log("addr = 0x%x",addr);
-    assert(0);
-    return 0;
+    uint32_t paddr_1 = page_translate(addr);
+    uint32_t paddr_2 = page_translate((uint32_t)addr + (0x1000 - (uint32_t)(addr & 0xfff)));
+    switch (len) {
+      case 2: return paddr_read(paddr_1, (0x1000 - (uint32_t)(addr & 0xfff))) | paddr_read(paddr_2, (uint32_t)(len - 0x1000 + (addr & 0xfff))) << 8;
+      case 4: return paddr_read(paddr_1, (0x1000 - (uint32_t)(addr & 0xfff))) | paddr_read(paddr_2, (uint32_t)(len - 0x1000 + (addr & 0xfff))) << (8 * (0x1000 - (addr & 0xfff)));
+      default: assert(0);
+    }
   }
   else
   {
