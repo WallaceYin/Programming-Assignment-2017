@@ -43,7 +43,7 @@ paddr_t page_translate(vaddr_t);
 uint32_t vaddr_read(vaddr_t addr, int len) {
   if (cpu.cr0.PG == 0)
     return paddr_read(addr, len);
-  if (((uint32_t)(addr & 0xfff) + (uint32_t)len) >= 0x1000)
+  if (((uint32_t)(addr & 0xfff) + (uint32_t)len) > 0x1000)
   {
     Log("addr = 0x%x",addr);
     assert(0);
