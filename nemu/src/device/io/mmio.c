@@ -54,7 +54,7 @@ uint32_t mmio_read(paddr_t addr, int len, int map_NO) {
 
 void mmio_write(paddr_t addr, int len, uint32_t data, int map_NO) {
   if (len >= 1 && len <= 4) {}
-  else Log("len = %d", len);
+  else Log("len = %d and addr = 0x%x",len, addr);
   assert(len >= 1 && len <= 4);
   MMIO_t *map = &maps[map_NO];
 
