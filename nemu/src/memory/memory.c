@@ -45,6 +45,7 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
     return paddr_read(addr, len);
   if (((uint32_t)(addr & 0xfff) + (uint32_t)len) >= 0x1000)
   {
+    Log("addr = 0x%x",addr);
     assert(0);
     return 0;
   }
