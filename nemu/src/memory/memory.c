@@ -85,7 +85,7 @@ void vaddr_write(vaddr_t addr, int len, uint32_t data) {
 
 paddr_t page_translate(vaddr_t addr) {
   uint32_t Dir_entry;
-  Dir_entry = paddr_read(((PDX(addr) << 2) | ((cpu.cr3_init & 0xfffff000) << 12)), 4);
+  Dir_entry = paddr_read(((PDX(addr) << 2) | (cpu.cr3_init & 0xfffff000)), 4);
   if ((Dir_entry & 0x001) == 0)
     Log("addr = %x",addr);
   assert((Dir_entry & 0x001) > 0);
