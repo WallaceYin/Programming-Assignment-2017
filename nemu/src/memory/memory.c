@@ -49,7 +49,7 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
     uint32_t paddr_2 = page_translate((uint32_t)addr + (0x1000 - (uint32_t)(addr & 0xfff)));
     uint32_t len_1 = 0x1000 - (uint32_t)(addr & 0xfff);
     uint32_t len_2 = len - len_1;
-    assert(0);
+    //assert(0);
     return paddr_read(paddr_1, len_1) | paddr_read(paddr_2, len_2) << (8 * len_1);
   }
   else
@@ -57,7 +57,6 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
     uint32_t paddr = page_translate(addr);
     return paddr_read(paddr, len);
   }
-  assert(0);
 }
 
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
