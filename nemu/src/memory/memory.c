@@ -90,6 +90,8 @@ paddr_t page_translate(vaddr_t addr) {
   assert((Dir_entry & 0x001) > 0);
   uint32_t Tab_entry;
   Tab_entry = paddr_read(((PTX(addr) << 2) | (Dir_entry & 0xfffff000)), 4);
+  if ((Tab_entry & 0x001) == 0)
+    Log("addr = %x", addr);
   assert((Tab_entry & 0x001) > 0);
   return ((Tab_entry & 0xfffff000) | OFF(addr));
 }
