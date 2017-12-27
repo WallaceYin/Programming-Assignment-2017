@@ -94,8 +94,8 @@ typedef struct {
   };
   union {
     struct {
-      uint32_t :12;
       uint32_t addr:20;
+      uint32_t :12;
     } cr3;
     uint32_t cr3_init;
   };
