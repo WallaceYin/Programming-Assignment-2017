@@ -99,6 +99,7 @@ typedef struct {
     } cr3;
     uint32_t cr3_init;
   };
+ bool INTR;
 } CPU_state;
 
 extern CPU_state cpu;

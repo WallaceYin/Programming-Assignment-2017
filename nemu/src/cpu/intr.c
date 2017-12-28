@@ -4,6 +4,7 @@
 void extern raise_intr(uint8_t NO, vaddr_t ret_addr) {
    t0 = cpu.eflags_init;
    rtl_push(&t0);
+	 cpu.eflags.IF = 0;
    t0 = cpu.cs;
    rtl_push(&t0);
    t0 = ret_addr;
@@ -16,4 +17,6 @@ void extern raise_intr(uint8_t NO, vaddr_t ret_addr) {
    decoding.jmp_eip = offset;
 }
 void dev_raise_intr() {
+	 cpu.INTR = 1;
+ 	 return;	 
 }
